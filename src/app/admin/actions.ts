@@ -13,6 +13,7 @@ import { slugify } from "@/lib/validation";
 import { isRole } from "@/lib/permissions";
 import { zodFieldErrors, type ActionState } from "@/lib/action-state";
 import type { Tx } from "@/lib/db";
+import { configProblem, friendlyServerError } from "@/lib/config-check";
 
 export type CredentialState = ActionState & { credentials?: { email: string; password: string; mustChange: boolean; company?: string } };
 
@@ -22,7 +23,19 @@ const DUMMY = "scrypt$32768$8$1$AAAAAAAAAAAAAAAAAAAAAA==$" + "A".repeat(86) + "=
 // ---------------------------------------------------------------------------
 // Acceso
 // ---------------------------------------------------------------------------
-export async function adminLogin(_: ActionState, fd: FormData): Promise<ActionState> {
+export async function adminLogin(prev: ActionState, fd: FormData): Promise<ActionState> {
+  const problem = configProblem();
+  if (problem) return { error: problem, values: { email: String(fd.get("email") ?? "") } };
+  try {
+    return await doAdminLogin(prev, fd);
+  } catch (e) {
+    if (e && typeof e === "object" && "digest" in e && String((e as { digest: unknown }).digest).startsWith("NEXT_REDIRECT")) throw e;
+    console.error("[admin login]", e);
+    return { error: friendlyServerError(e), values: { email: String(fd.get("email") ?? "") } };
+  }
+}
+
+async function doAdminLogin(_: ActionState, fd: FormData): Promise<ActionState> {
   const email = String(fd.get("email") ?? "").trim().toLowerCase();
   const password = String(fd.get("password") ?? "");
   if (!email || !password) return { error: "Escribe email y contraseña.", values: { email } };

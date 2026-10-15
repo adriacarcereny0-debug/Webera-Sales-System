@@ -121,6 +121,8 @@ Documentadas una a una en [`.env.example`](.env.example).
 4. `vercel.json` programa `/api/cron/automations` una vez al día (`0 7 * * *` UTC), compatible con el plan gratuito. En un plan de pago, cambia a cada 15 minutos (`*/15 * * * *`) para que los recordatorios de visita sean puntuales. Alternativa: cualquier cron externo que llame a `GET https://<app>/api/cron/automations` con la cabecera `Authorization: Bearer <CRON_SECRET>`.
 5. Comprueba **Ajustes › Resumen**: la lista de puesta en marcha indica qué falta.
 
+Las funciones se ejecutan en Fráncfort (`"regions": ["fra1"]` en `vercel.json`); crea la base de datos en la misma región (Neon `aws-eu-central-1`) para que cada consulta no cruce el Atlántico. Si el servidor no tiene `DATABASE_URL` o faltan las tablas, las pantallas de acceso (`/login` y `/admin/login`) lo dicen con un mensaje claro en lugar de fallar en silencio.
+
 ### Copias de seguridad
 La aplicación no hace copias de la base de datos por sí misma. Activa las del proveedor (Neon: historial de restauración por punto en el tiempo según plan; Railway/Vercel Postgres: copias según plan; servidor propio: `pg_dump` programado). Como respaldo funcional, el propietario puede descargar la copia completa en JSON desde **Ajustes › Importar, exportar y demo**.
 

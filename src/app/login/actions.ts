@@ -7,6 +7,7 @@ import { verifyPassword } from "@/lib/auth/password";
 import { rateLimit } from "@/lib/ratelimit";
 import { clientIp, userAgent } from "@/lib/request";
 import type { ActionState } from "@/lib/action-state";
+import { configProblem, friendlyServerError } from "@/lib/config-check";
 
 const schema = z.object({
   email: z.string().trim().toLowerCase().email("Escribe un email válido."),
@@ -16,7 +17,19 @@ const schema = z.object({
 // Hash ficticio para igualar tiempos cuando el email no existe.
 const DUMMY = "scrypt$32768$8$1$AAAAAAAAAAAAAAAAAAAAAA==$" + "A".repeat(86) + "==";
 
-export async function login(_: ActionState, fd: FormData): Promise<ActionState> {
+export async function login(prev: ActionState, fd: FormData): Promise<ActionState> {
+  const problem = configProblem();
+  if (problem) return { error: problem, values: { email: String(fd.get("email") ?? "") } };
+  try {
+    return await doLogin(prev, fd);
+  } catch (e) {
+    if (e && typeof e === "object" && "digest" in e && String((e as { digest: unknown }).digest).startsWith("NEXT_REDIRECT")) throw e;
+    console.error("[login]", e);
+    return { error: friendlyServerError(e), values: { email: String(fd.get("email") ?? "") } };
+  }
+}
+
+async function doLogin(_: ActionState, fd: FormData): Promise<ActionState> {
   const parsed = schema.safeParse({ email: fd.get("email"), password: fd.get("password") });
   const email = String(fd.get("email") ?? "");
   if (!parsed.success) return { error: parsed.error.issues[0].message, values: { email } };
