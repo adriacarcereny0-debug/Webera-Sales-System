@@ -37,11 +37,33 @@ Producto de **Webera**, multiempresa: cada instalador trabaja con su logotipo, c
 - **WhatsApp.** No integrado. Si se añade, debe ser con la API oficial de WhatsApp Business.
 - **Recuperación de contraseña por email.** La restablece un propietario desde Usuarios (contraseña temporal).
 - **Facturación, firma electrónica y calendario externo** (Google/Outlook).
-- **Alta de empresas desde una interfaz web de Webera.** Se hace con un comando (`npm run db:create-company`).
 - **Copias de seguridad propias.** Dependen del proveedor de PostgreSQL (ver abajo); la aplicación ofrece exportación manual.
 - **Validación fiscal.** El sistema calcula, pero no decide qué tipo de IVA aplica ni valida precios técnicos.
 
 ---
+
+## Consola de plataforma (`/admin`)
+
+Panel exclusivo del equipo de Webera, separado de las cuentas de las empresas (otra tabla de usuarios, otra cookie limitada a `/admin`, sesiones de 12 horas y registro de todo lo que se hace).
+
+- **Resumen:** empresas activas, usuarios, solicitudes y presupuestos de todas las empresas.
+- **Alta de cliente:** crea la empresa con sus servicios, plantillas y automatizaciones por defecto, y el acceso de su propietario. Opcionalmente, con datos de ejemplo.
+- **Contraseñas para clientes:** en cada usuario, «Cambiar contraseña…» permite generar una segura o escribirla a mano y elegir si debe cambiarla al entrar. Las credenciales se muestran **una sola vez** con un botón «Copiar acceso» (dirección, usuario y contraseña) para enviárselas al cliente. Cambiar una contraseña cierra sus sesiones abiertas.
+- **Usuarios de todas las empresas:** búsqueda por email, nombre o empresa, con cambio de contraseña directo.
+- **Empresas:** editar nombre, identificador y color, nota interna, **suspender** (nadie entra y el formulario deja de aceptar solicitudes; los datos se conservan), restaurar demos y eliminar (exige escribir el identificador).
+- **Equipo Webera:** añadir o desactivar administradores y cambiar tu propia contraseña (mínimo 12 caracteres).
+- **Registro:** cada acción de la consola queda anotada.
+
+### Crear tu cuenta de administrador
+
+Las credenciales nunca se guardan en el código. Se pasan por variables de entorno al ejecutar el script (también sirve para restablecer la contraseña si se olvida):
+
+```bash
+ADMIN_EMAIL='tu@email.com' ADMIN_PASSWORD='tu-contraseña-segura' ADMIN_NAME='Tu nombre' \
+  DATABASE_URL='<url de producción>' npm run db:create-admin
+```
+
+Después entra en `https://<tu-app>/admin/login`.
 
 ## Tecnología
 
@@ -121,15 +143,16 @@ TEST_DATABASE_URL=<bd vacía migrada> npm run test:db  # RLS y automatizaciones 
 E2E_DATABASE_URL=<bd con demo> npm run test:e2e       # navegador contra la app en marcha
 ```
 
-Resultado en la última ejecución: 25 unitarias, 11 de base de datos y 6 de extremo a extremo superadas (flujo completo contacto → presupuesto revisado → PDF, formulario público, permisos por rol y aislamiento entre empresas).
+Resultado en la última ejecución: 25 unitarias, 11 de base de datos y 8 de extremo a extremo superadas (flujo completo contacto → presupuesto revisado → PDF, formulario público, permisos por rol, aislamiento entre empresas y consola: alta de cliente, contraseñas, primer acceso, suspensión y baja).
 
 ## Estructura
 
 ```
-db/migrations/        SQL: tablas, rol webera_app, RLS
+db/migrations/        SQL: tablas, rol webera_app, RLS, consola de plataforma
 scripts/              migrar, demo, alta de empresa
 src/app/(app)/        pantallas autenticadas
 src/app/f/[slug]/     formulario público
+src/app/admin/        consola de plataforma de Webera
 src/app/api/          PDF, exportación, fotos, logotipo, cron
 src/server/           consultas y lógica de servidor
 src/lib/              dominio (cálculo, fechas, validación, CSV), auth, email

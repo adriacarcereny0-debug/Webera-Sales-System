@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CalendarPlus, FilePlus2, Link2, UserPlus } from "lucide-react";
+import { ArrowRight, CalendarPlus, FilePlus2, UserPlus } from "lucide-react";
 import { requireSession, tenant } from "@/lib/auth/session";
 import { can } from "@/lib/permissions";
 import { dashboardData } from "@/server/dashboard";
@@ -19,6 +19,8 @@ function greeting(now: Date) {
   const h = madridParts(now).hour;
   return h < 14 ? "Buenos días" : h < 21 ? "Buenas tardes" : "Buenas noches";
 }
+
+const ACTIVITY_FALLBACK: Record<string, string> = { cambio_fase: "Cambio de fase", nota: "Nota", llamada: "Llamada", tarea: "Tarea", presupuesto: "Presupuesto", sistema: "Registro" };
 
 const pct = (a: number, b: number) => (b === 0 ? null : Math.round((a / b) * 100));
 
@@ -62,13 +64,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <header className="mb-6 flex flex-col gap-4 md:mb-8 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="text-sm text-muted first-letter:uppercase">{fmtWeekday(now)}</p>
-          <h1 className="mt-1 text-[1.6rem] font-semibold tracking-[-0.015em] md:text-[1.75rem]">{greeting(now)}, {s.user.name.split(" ")[0]}</h1>
+          <h1 className="mt-1 text-[1.75rem] leading-[1.1] font-semibold tracking-[-0.028em] md:text-[2.25rem]">{greeting(now)}, {s.user.name.split(" ")[0]}</h1>
         </div>
         <nav aria-label="Acciones rápidas" className="flex flex-wrap gap-2">
           {can(s.user.role, "crm.write") && <ButtonLink href="/contactos/nuevo" variant="primary"><UserPlus className="size-4" strokeWidth={1.75} aria-hidden />Nuevo contacto</ButtonLink>}
           {can(s.user.role, "quotes.write") && <ButtonLink href="/presupuestos/nuevo" variant="secondary"><FilePlus2 className="size-4" strokeWidth={1.75} aria-hidden />Presupuesto</ButtonLink>}
           {can(s.user.role, "tasks.write") && <ButtonLink href="/agenda" variant="secondary"><CalendarPlus className="size-4" strokeWidth={1.75} aria-hidden />Tarea o visita</ButtonLink>}
-          <ButtonLink href={`/f/${s.company.slug}`} target="_blank" variant="ghost"><Link2 className="size-4" strokeWidth={1.75} aria-hidden />Formulario web</ButtonLink>
         </nav>
       </header>
       <Flash code={sp.aviso} />
@@ -83,8 +84,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                   {x.label}
                   <ArrowRight className="size-4 text-faint opacity-0 transition-opacity group-hover:opacity-100" strokeWidth={1.75} aria-hidden />
                 </p>
-                <p className="num mt-1 text-[1.75rem] leading-tight font-semibold tracking-[-0.01em] text-ink">{x.value}</p>
-                <p className="mt-1 text-[0.78rem] text-muted">{x.note}</p>
+                <p className="num mt-1.5 text-[2rem] leading-none font-semibold tracking-[-0.025em] text-ink">{x.value}</p>
+                <p className="mt-2 text-[0.78rem] leading-snug text-muted">{x.note}</p>
               </Link>
             </li>
           ))}
@@ -155,7 +156,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                   <li key={a.id} className="flex items-baseline justify-between gap-4 px-4 py-2.5 md:px-5">
                     <p className="min-w-0 truncate text-[0.86rem] text-ink-2">
                       {a.contact_id && <Link href={`/contactos/${a.contact_id}`} className="font-medium text-ink hover:underline">{a.contact_name}</Link>}
-                      {a.contact_id && " · "}{a.body ?? a.type}
+                      {a.contact_id && " · "}{a.body ?? ACTIVITY_FALLBACK[a.type] ?? a.type}
                     </p>
                     <time className="shrink-0 text-[0.76rem] text-muted" dateTime={a.created_at}>{relative(a.created_at, now)}</time>
                   </li>

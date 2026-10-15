@@ -7,8 +7,8 @@ export function PageHeader({ title, description, actions, meta }: { title: React
     <header className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
       <div className="min-w-0">
         {meta && <div className="mb-2 text-sm text-muted">{meta}</div>}
-        <h1 className="text-[1.6rem] font-semibold tracking-[-0.015em] text-ink text-balance md:text-[1.75rem]">{title}</h1>
-        {description && <p className="mt-1.5 max-w-[68ch] text-[0.95rem] text-muted text-pretty">{description}</p>}
+        <h1 className="text-[1.65rem] leading-[1.15] font-semibold tracking-[-0.025em] text-ink text-balance md:text-[2rem]">{title}</h1>
+        {description && <p className="mt-2 max-w-[68ch] text-[0.98rem] leading-relaxed text-muted text-pretty">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </header>
@@ -24,7 +24,7 @@ export function SheetHeader({ title, actions, description, id }: { title: ReactN
   return (
     <div className="flex items-start justify-between gap-3 border-b border-rule px-4 py-3 md:px-5">
       <div className="min-w-0">
-        <h2 id={id} className="text-[0.95rem] font-semibold text-ink">{title}</h2>
+        <h2 id={id} className="text-[0.95rem] font-semibold tracking-[-0.005em] text-ink">{title}</h2>
         {description && <p className="mt-0.5 text-[0.82rem] text-muted">{description}</p>}
       </div>
       {actions && <div className="flex shrink-0 items-center gap-1.5">{actions}</div>}

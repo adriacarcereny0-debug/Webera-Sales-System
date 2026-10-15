@@ -136,7 +136,7 @@ Paleta contenida: neutros fríos, una tinta de marca y los tintes de copia con s
 **Character:** una grotesca de trabajo, legible en tablas, con un eje de anchura que permite las cifras estrechas de numeradora sin traer una segunda familia.
 
 ### Hierarchy
-- **Headline** (600, 1.75rem, 1.2, −0.015em): título de página.
+- **Headline** (600, 2rem, 1.15, −0.025em): título de página; saludo del panel a 2.25rem.
 - **Title** (600, 0.95rem): cabeceras de hoja.
 - **Body** (400, 0.875–0.95rem, 1.5): contenido; prosa del manual a 70ch.
 - **Label** (500, 0.82rem): etiquetas de campo.
@@ -175,7 +175,12 @@ Esquinas pequeñas: 4px en chips, 6px en controles, 8px en hojas. El trepado (`.
 - **Estilo:** anillo de regla fuerte, foco con anillo de marca de 2px, error con anillo rojo y mensaje debajo enlazado por `aria-describedby`.
 
 ### Navigation
-- **Barra lateral:** enlaces con icono de trazo fino; activo con fondo blanco al 14 % y `aria-current`; contadores en chip amarillo.
+- **Barra lateral:** dos grupos («Trabajo» y «Gestión») con etiqueta pequeña; enlaces con icono de trazo fino; activo con fondo blanco al 13 % y un punto rojo de folio; contadores en chip amarillo.
+- **Barra superior:** buscador global de contactos (atajos «/» y Ctrl/Cmd + K) sobre papel translúcido y fijo.
+- **Consola de plataforma (/admin):** cabecera en tinta casi negra (#0c1229) con pestañas subrayadas en rojo de folio, para que nunca se confunda con la app de una empresa.
+
+### Marca Webera
+Marca cuadrada en tinta azul con una «W» trazada como firma de bolígrafo y el punto rojo del folio; acompaña al nombre «Webera» en acceso, consola y pie de la barra lateral.
 
 ### Folio (componente distintivo)
 `Nº 000123` en rojo numeradora, ancho 72 %, tabular. En listados, tablero y fichas; el formulario público lo muestra al cliente como número de solicitud.

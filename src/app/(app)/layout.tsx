@@ -6,6 +6,8 @@ import { can, ROLE_LABELS } from "@/lib/permissions";
 import { logout } from "@/app/login/actions";
 import { NavLinks, MobileNav } from "@/components/shell/nav";
 import { CompanyMark } from "@/components/shell/company-mark";
+import { GlobalSearch } from "@/components/shell/search";
+import { WeberaMark } from "@/components/brand/webera-mark";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const s = await requireSession({ allowPasswordChange: true });
@@ -48,10 +50,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <div className="px-4 pt-5 pb-4">
           <CompanyMark name={s.company.name} logoUrl={logoUrl} />
         </div>
-        <nav className="flex-1 overflow-y-auto px-3" aria-label="Principal">
+        <nav className="flex-1 overflow-y-auto px-3 pt-2" aria-label="Principal">
           <NavLinks badges={badges} />
         </nav>
         <div className="border-t border-white/10 p-3">{userBlock}</div>
+        <p className="flex items-center gap-2 px-5 pb-4 text-[0.7rem] text-white/35"><WeberaMark size={14} tone="light" />Webera Sales System</p>
       </aside>
 
       {/* Barra superior (móvil) */}
@@ -72,7 +75,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </p>
           </div>
         )}
-        <main id="contenido" className="mx-auto max-w-[84rem] px-4 pt-6 pb-16 md:px-8 md:pt-9">{children}</main>
+        <div className="no-print sticky top-14 z-20 border-b border-rule/80 bg-paper/85 backdrop-blur-md md:top-0">
+          <div className="mx-auto flex max-w-[84rem] items-center gap-3 px-4 py-2.5 md:px-8">
+            <GlobalSearch />
+            <Link href={`/f/${s.company.slug}`} target="_blank" className="ml-auto hidden shrink-0 text-[0.84rem] text-muted hover:text-ink lg:block">Ver mi formulario web</Link>
+          </div>
+        </div>
+        <main id="contenido" className="mx-auto max-w-[84rem] px-4 pt-6 pb-16 md:px-8 md:pt-8">{children}</main>
       </div>
     </div>
   );

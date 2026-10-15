@@ -29,12 +29,15 @@ export async function login(_: ActionState, fd: FormData): Promise<ActionState> 
   }
 
   const user = await withSystem((tx) =>
-    tx.one<{ id: string; password_hash: string; active: boolean }>(
-      `select id, password_hash, active from users where email = $1`, [parsed.data.email]),
+    tx.one<{ id: string; password_hash: string; active: boolean; company_active: boolean }>(
+      `select u.id, u.password_hash, u.active, c.active as company_active from users u join companies c on c.id = u.company_id where u.email = $1`, [parsed.data.email]),
   );
   const valid = await verifyPassword(parsed.data.password, user?.password_hash ?? DUMMY).catch(() => false);
   if (!user || !valid || !user.active) {
     return { error: "El email o la contraseña no son correctos.", values: { email } };
+  }
+  if (!user.company_active) {
+    return { error: "La cuenta de tu empresa está suspendida. Contacta con Webera.", values: { email } };
   }
   await createSession(user.id, ip, await userAgent());
   redirect("/panel");

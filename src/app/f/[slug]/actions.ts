@@ -52,7 +52,7 @@ export async function submitLead(slug: string, _: LeadState, fd: FormData): Prom
   const d = parsed.data;
 
   const company = await withSystem((tx) =>
-    tx.one<{ id: string; form_enabled: boolean; form_photos_enabled: boolean }>(`select id, form_enabled, form_photos_enabled from companies where slug = $1`, [slug]));
+    tx.one<{ id: string; form_enabled: boolean; form_photos_enabled: boolean }>(`select id, form_enabled, form_photos_enabled from companies where slug = $1 and active`, [slug]));
   if (!company || !company.form_enabled) return { error: "Este formulario no está disponible." };
 
   // 4. Fotos (solo si la empresa lo ha activado): tipo comprobado por contenido y tamaño máximo.

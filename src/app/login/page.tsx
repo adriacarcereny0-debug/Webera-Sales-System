@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
+import { WeberaWordmark } from "@/components/brand/webera-mark";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Acceso" };
@@ -8,60 +9,65 @@ export const metadata: Metadata = { title: "Acceso" };
 export default async function LoginPage() {
   if (await getSession()) redirect("/panel");
   return (
-    <main className="grid-cols-1 grid min-h-dvh lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+    <main className="grid min-h-dvh grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
       <section className="flex flex-col justify-between px-6 py-8 sm:px-12 lg:px-16">
-        <p className="text-[0.95rem] font-semibold tracking-tight">
-          Webera <span className="font-normal text-muted">Sales System</span>
-        </p>
-        <div className="mx-auto w-full max-w-sm py-12">
-          <h1 className="text-[1.75rem] font-semibold tracking-[-0.015em]">Accede a tu cuenta</h1>
-          <p className="mt-1.5 text-[0.95rem] text-muted">Usa el email y la contraseña que te facilitó tu empresa.</p>
-          <div className="mt-8"><LoginForm /></div>
+        <WeberaWordmark sub="Sales System" />
+        <div className="mx-auto w-full max-w-sm py-14">
+          <h1 className="text-[2rem] leading-[1.1] font-semibold tracking-[-0.025em] text-balance">Accede a tu cuenta</h1>
+          <p className="mt-2.5 text-[0.98rem] text-muted">Usa el email y la contraseña que te facilitó tu empresa o Webera.</p>
+          <div className="mt-9"><LoginForm /></div>
         </div>
-        <p className="text-[0.8rem] text-muted">¿Has olvidado la contraseña? Pide a la persona administradora de tu empresa que la restablezca.</p>
+        <p className="max-w-sm text-[0.8rem] leading-relaxed text-muted">¿Has olvidado la contraseña? Pide a la persona responsable de tu empresa que la restablezca, o escríbenos.</p>
       </section>
 
-      <aside aria-hidden className="relative hidden overflow-hidden bg-brand-ink text-white lg:flex lg:items-center lg:justify-center">
-        <TalonarioStub />
+      <aside aria-hidden className="relative hidden overflow-hidden bg-brand-ink text-white lg:flex lg:flex-col lg:justify-center lg:px-16 xl:px-24">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1.3px)", backgroundSize: "18px 18px" }} />
+        <p className="relative max-w-md text-[2.1rem] leading-[1.12] font-semibold tracking-[-0.025em] text-balance">
+          Que ninguna solicitud se quede en el cajón.
+        </p>
+        <p className="relative mt-4 max-w-md text-[1rem] leading-relaxed text-white/70">
+          Cada contacto con su número, su responsable y su próximo paso. Del formulario de tu web al presupuesto aceptado.
+        </p>
+        <div className="relative mt-12 h-[19rem] w-full max-w-[32rem]">
+          <CarbonCopies />
+        </div>
       </aside>
     </main>
   );
 }
 
-/** Ilustración tipográfica: una hoja de talonario con su matriz y trepado. */
-function TalonarioStub() {
-  const rows: [string, string][] = [
-    ["Solicitud", "Aerotermia · vivienda unifamiliar"],
-    ["Visita", "Jueves, 10:30"],
-    ["Presupuesto", "Pendiente de revisión"],
-    ["Seguimiento", "En 3 días"],
+/** Las tres copias del talonario, ligeramente desplazadas como al arrancarlas. */
+function CarbonCopies() {
+  const rows: [string, string, string][] = [
+    ["Solicitud", "Aerotermia · vivienda de 140 m²", "tint-blanca"],
+    ["Visita técnica", "Jueves, 10:30", "tint-azul"],
+    ["Presupuesto", "Revisado, listo para enviar", "tint-rosa"],
+    ["Seguimiento", "Llamar en 3 días", "tint-oro"],
   ];
   return (
-    <div className="w-[min(30rem,80%)] -rotate-[1.5deg]">
-      <div className="flex overflow-hidden rounded-md bg-[#fbf1c7] text-[#3b2f00] shadow-[0_30px_60px_-20px_rgb(0_0_0/0.55)]">
-        <div className="w-24 shrink-0 border-r border-dashed border-[#d9c46e] px-3 py-5">
-          <p className="text-[0.65rem] uppercase tracking-[0.12em] opacity-70">Matriz</p>
-          <p className="folio mt-2 text-lg">Nº 000128</p>
+    <>
+      <div className="absolute inset-x-6 top-8 h-64 rotate-[3.5deg] rounded-md bg-[#fbe3ea] shadow-[0_20px_40px_-18px_rgb(0_0_0/0.5)]" />
+      <div className="absolute inset-x-3 top-4 h-64 rotate-[1.6deg] rounded-md bg-[#fbf1c7] shadow-[0_20px_40px_-18px_rgb(0_0_0/0.5)]" />
+      <div className="absolute inset-x-0 top-0 flex h-64 -rotate-[0.8deg] overflow-hidden rounded-md bg-white text-ink shadow-[0_34px_70px_-24px_rgb(0_0_0/0.65)]">
+        <div className="flex w-24 shrink-0 flex-col justify-between border-r border-dashed border-rule-strong bg-paper px-3 py-4">
+          <p className="folio text-[1.05rem]">Nº 000128</p>
+          <p className="text-[0.68rem] leading-snug text-muted">Ejemplo ilustrativo</p>
         </div>
-        <div className="flex-1 px-5 py-5">
-          <div className="flex items-baseline justify-between">
-            <p className="font-semibold">Hoja de seguimiento</p>
-            <p className="folio text-lg">Nº 000128</p>
+        <div className="flex-1 px-5 py-4">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-[0.95rem] font-semibold">Marta S. · Gandia</p>
+            <p className="folio text-[1.05rem]">Nº 000128</p>
           </div>
-          <dl className="mt-4 divide-y divide-[#e6d79a] text-sm">
-            {rows.map(([k, v]) => (
-              <div key={k} className="flex justify-between gap-4 py-2">
-                <dt className="opacity-70">{k}</dt>
+          <dl className="mt-3 divide-y divide-rule text-[0.84rem]">
+            {rows.map(([k, v, t]) => (
+              <div key={k} className="flex items-center justify-between gap-4 py-2">
+                <dt className="flex items-center gap-2 text-muted"><span className={`${t} tint-chip size-2.5 rounded-full`} />{k}</dt>
                 <dd className="text-right font-medium">{v}</dd>
               </div>
             ))}
           </dl>
-          <p className="mt-4 text-[0.7rem] opacity-60">Ejemplo ilustrativo</p>
         </div>
       </div>
-      <p className="mt-10 max-w-sm rotate-[1.5deg] text-[0.95rem] leading-relaxed text-white/80">
-        Cada solicitud con su número, su responsable y su próximo paso. Del primer contacto al presupuesto aceptado.
-      </p>
-    </div>
+    </>
   );
 }

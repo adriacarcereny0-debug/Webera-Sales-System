@@ -7,45 +7,62 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const ITEMS = [
-  { href: "/panel", label: "Panel", Icon: Gauge },
-  { href: "/contactos", label: "Contactos", Icon: Users },
-  { href: "/pipeline", label: "Pipeline", Icon: Kanban },
-  { href: "/presupuestos", label: "Presupuestos", Icon: FileText },
-  { href: "/agenda", label: "Agenda y tareas", Icon: CalendarClock },
-  { href: "/automatizaciones", label: "Automatizaciones", Icon: Workflow },
-  { href: "/ajustes", label: "Ajustes", Icon: Settings },
-  { href: "/ayuda", label: "Manual de uso", Icon: CircleHelp },
+const GROUPS = [
+  {
+    label: "Trabajo",
+    items: [
+      { href: "/panel", label: "Panel", Icon: Gauge },
+      { href: "/contactos", label: "Contactos", Icon: Users },
+      { href: "/pipeline", label: "Pipeline", Icon: Kanban },
+      { href: "/presupuestos", label: "Presupuestos", Icon: FileText },
+      { href: "/agenda", label: "Agenda y tareas", Icon: CalendarClock },
+    ],
+  },
+  {
+    label: "Gestión",
+    items: [
+      { href: "/automatizaciones", label: "Automatizaciones", Icon: Workflow },
+      { href: "/ajustes", label: "Ajustes", Icon: Settings },
+      { href: "/ayuda", label: "Manual de uso", Icon: CircleHelp },
+    ],
+  },
 ];
 
 export function NavLinks({ onNavigate, badges = {} }: { onNavigate?: () => void; badges?: Record<string, number> }) {
   const pathname = usePathname();
   return (
-    <ul className="space-y-0.5">
-      {ITEMS.map(({ href, label, Icon }) => {
-        const active = pathname === href || pathname.startsWith(href + "/");
-        const badge = badges[href];
-        return (
-          <li key={href}>
-            <Link
-              href={href}
-              onClick={onNavigate}
-              aria-current={active ? "page" : undefined}
-              className={cn(
-                "group flex h-11 items-center gap-3 rounded-md px-3 text-[0.9rem] transition-colors duration-150 md:h-9",
-                active ? "bg-white/14 font-medium text-white" : "text-white/72 hover:bg-white/8 hover:text-white",
-              )}
-            >
-              <Icon className={cn("size-[18px] shrink-0", active ? "text-white" : "text-white/60 group-hover:text-white/85")} strokeWidth={1.6} aria-hidden />
-              <span className="flex-1 truncate">{label}</span>
-              {badge ? (
-                <span className="num rounded-[4px] bg-[#fbf1c7] px-1.5 text-[0.72rem] font-semibold text-[#5b4600]" aria-label={`${badge} pendientes`}>{badge}</span>
-              ) : null}
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
+    <div className="space-y-6">
+      {GROUPS.map((g) => (
+        <div key={g.label}>
+          <p className="mb-1.5 px-3 text-[0.7rem] font-medium tracking-[0.08em] text-white/40 uppercase">{g.label}</p>
+          <ul className="space-y-0.5">
+            {g.items.map(({ href, label, Icon }) => {
+              const active = pathname === href || pathname.startsWith(href + "/");
+              const badge = badges[href];
+              return (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    onClick={onNavigate}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "group relative flex h-11 items-center gap-3 rounded-md px-3 text-[0.9rem] transition-colors duration-150 md:h-9",
+                      active ? "bg-white/[0.13] font-medium text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]" : "text-white/70 hover:bg-white/[0.07] hover:text-white",
+                    )}
+                  >
+                    <Icon className={cn("size-[18px] shrink-0 transition-colors", active ? "text-white" : "text-white/55 group-hover:text-white/85")} strokeWidth={1.6} aria-hidden />
+                    <span className="flex-1 truncate">{label}</span>
+                    {badge ? (
+                      <span className="num rounded-[4px] bg-[#fbf1c7] px-1.5 text-[0.72rem] font-semibold text-[#5b4600]" aria-label={`${badge} pendientes`}>{badge}</span>
+                    ) : active ? <span className="size-1.5 rounded-full bg-[#ff6a5f]" aria-hidden /> : null}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
   );
 }
 

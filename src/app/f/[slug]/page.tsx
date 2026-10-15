@@ -14,7 +14,7 @@ async function load(slug: string) {
     const c = await tx.one<{ id: string; name: string; legal_name: string | null; email: string | null; phone: string | null; brand_color: string; has_logo: boolean;
       form_enabled: boolean; form_photos_enabled: boolean; form_intro: string | null; form_thanks: string | null; privacy_url: string | null; privacy_controller: string | null; is_demo: boolean }>(
       `select id, name, legal_name, email, phone, brand_color, (logo_data is not null) as has_logo, form_enabled, form_photos_enabled,
-              form_intro, form_thanks, privacy_url, privacy_controller, is_demo from companies where slug = $1`, [slug]);
+              form_intro, form_thanks, privacy_url, privacy_controller, is_demo from companies where slug = $1 and active`, [slug]);
     if (!c) return null;
     const services = await tx.query<{ id: string; name: string }>(`select id, name from services where company_id = $1 and active order by sort, name`, [c.id]);
     return { c, services };

@@ -70,7 +70,7 @@ export const getSession = cache(async (): Promise<Session | null> => {
               (c.logo_data is not null) as has_logo
          from sessions s
          join users u on u.id = s.user_id and u.active
-         join companies c on c.id = u.company_id
+         join companies c on c.id = u.company_id and c.active
         where s.token_hash = $1 and s.expires_at > now()`,
       [hashToken(token)],
     ),

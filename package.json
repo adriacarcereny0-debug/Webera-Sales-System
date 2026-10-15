@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed-demo": "tsx scripts/seed-demo.ts",
-    "db:create-company": "tsx scripts/create-company.ts"
+    "db:create-company": "tsx scripts/create-company.ts",
+    "db:create-admin": "tsx scripts/create-admin.ts"
   },
   "engines": {
     "node": ">=20.9"
