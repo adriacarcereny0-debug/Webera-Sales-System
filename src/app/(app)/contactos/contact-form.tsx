@@ -18,13 +18,13 @@ export interface ContactFormDefaults {
 
 function Section({ title, children, description }: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <fieldset className="grid gap-x-8 gap-y-4 border-b border-rule px-4 py-6 last:border-0 md:grid-cols-[14rem_minmax(0,1fr)] md:px-6">
+    <fieldset className="grid-cols-1 grid gap-x-8 gap-y-4 border-b border-rule px-4 py-6 last:border-0 md:grid-cols-[14rem_minmax(0,1fr)] md:px-6">
       <legend className="sr-only">{title}</legend>
       <div aria-hidden>
         <p className="font-semibold text-ink">{title}</p>
         {description && <p className="mt-1 text-[0.82rem] text-muted">{description}</p>}
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">{children}</div>
+      <div className="grid-cols-1 grid gap-4 sm:grid-cols-2">{children}</div>
     </fieldset>
   );
 }

@@ -104,7 +104,7 @@ export default async function ContactsPage({ searchParams }: { searchParams: Pro
       </nav>
 
       <Sheet>
-        <AutoSubmitForm className="grid gap-2 border-b border-rule p-3 md:grid-cols-[minmax(14rem,1.6fr)_repeat(4,minmax(0,1fr))_auto] md:p-4">
+        <AutoSubmitForm className="grid-cols-1 grid gap-2 border-b border-rule p-3 md:grid-cols-[minmax(14rem,1.6fr)_repeat(4,minmax(0,1fr))_auto] md:p-4">
           {filters.stage && <input type="hidden" name="fase" value={filters.stage} />}
           <div className="relative">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-faint" strokeWidth={1.75} aria-hidden />

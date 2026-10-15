@@ -49,7 +49,7 @@ export function QuoteEditor({
     return copy;
   });
 
-  const payload = JSON.stringify(lines.map(({ key: _k, ...rest }) => rest));
+  const payload = JSON.stringify(lines.map((l) => ({ description: l.description, quantity: l.quantity, unit: l.unit, unit_price: l.unit_price, discount: l.discount, tax_rate: l.tax_rate })));
   const lineErr = state.lineErrors ?? {};
 
   return (
@@ -59,7 +59,7 @@ export function QuoteEditor({
       {state.error && <Notice kind="error">{state.error}</Notice>}
 
       <section className="rounded-lg bg-sheet shadow-sheet ring-1 ring-rule">
-        <div className="grid gap-4 p-4 md:grid-cols-2 md:p-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,2fr)_1fr_1fr]">
+        <div className="grid-cols-1 grid gap-4 p-4 md:grid-cols-2 md:p-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,2fr)_1fr_1fr]">
           <Field label="Cliente" htmlFor="contact_id">
             <Select id="contact_id" name="contact_id" defaultValue={defaults.contact_id} required>
               <option value="">Elige un contacto…</option>
@@ -144,7 +144,7 @@ export function QuoteEditor({
         </div>
       </section>
 
-      <section className="grid gap-4 rounded-lg bg-sheet p-4 shadow-sheet ring-1 ring-rule md:grid-cols-2 md:p-5">
+      <section className="grid-cols-1 grid gap-4 rounded-lg bg-sheet p-4 shadow-sheet ring-1 ring-rule md:grid-cols-2 md:p-5">
         <Field label="Observaciones para el cliente" htmlFor="notes" optional hint="Aparecen en el documento.">
           <Textarea id="notes" name="notes" rows={4} defaultValue={defaults.notes} />
         </Field>

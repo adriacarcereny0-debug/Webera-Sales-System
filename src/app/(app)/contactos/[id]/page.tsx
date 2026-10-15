@@ -80,7 +80,7 @@ export default async function ContactPage({ params, searchParams }: { params: Pr
       <Flash code={sp.aviso} />
 
       {/* Talonario: matriz | trepado | hoja */}
-      <div className="grid gap-5 lg:grid-cols-[19rem_2px_minmax(0,1fr)] lg:gap-0">
+      <div className="grid-cols-1 grid gap-5 lg:grid-cols-[19rem_2px_minmax(0,1fr)] lg:gap-0">
         {/* MATRIZ */}
         <aside className="space-y-5 lg:pr-6" aria-label="Resumen del contacto">
           <Sheet className="overflow-hidden">
@@ -193,7 +193,7 @@ export default async function ContactPage({ params, searchParams }: { params: Pr
 
           <Sheet>
             <SheetHeader title="Tareas y visitas" description={tasks.filter((t) => !t.done_at).length ? `${tasks.filter((t) => !t.done_at).length} pendientes` : undefined} />
-            <div className="grid gap-0 xl:grid-cols-[minmax(0,1fr)_20rem]">
+            <div className="grid-cols-1 grid gap-0 xl:grid-cols-[minmax(0,1fr)_20rem]">
               <div className="min-w-0">
                 {tasks.length ? <TaskList tasks={tasks} showContact={false} canWrite={can(s.user.role, "tasks.write")} now={now} /> :
                   <p className="px-4 py-6 text-sm text-muted md:px-5">Sin tareas. Programa la visita técnica o un recordatorio de llamada.</p>}

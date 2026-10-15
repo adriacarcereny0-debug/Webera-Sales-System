@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Acceso" };
 export default async function LoginPage() {
   if (await getSession()) redirect("/panel");
   return (
-    <main className="grid min-h-dvh lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+    <main className="grid-cols-1 grid min-h-dvh lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <section className="flex flex-col justify-between px-6 py-8 sm:px-12 lg:px-16">
         <p className="text-[0.95rem] font-semibold tracking-tight">
           Webera <span className="font-normal text-muted">Sales System</span>

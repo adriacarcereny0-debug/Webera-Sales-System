@@ -1,6 +1,12 @@
 import "server-only";
-import { Pool, type PoolClient, type QueryResultRow } from "pg";
+import { Pool, types, type PoolClient, type QueryResultRow } from "pg";
 import { env } from "./env";
+
+// timestamptz/timestamp como texto ISO (serializable y estable entre servidor y cliente);
+// date como "YYYY-MM-DD" sin conversión de zona horaria.
+types.setTypeParser(1184, (v) => new Date(v).toISOString());
+types.setTypeParser(1114, (v) => new Date(v + "Z").toISOString());
+types.setTypeParser(1082, (v) => v);
 
 declare global {
   var __weberaPool: Pool | undefined;

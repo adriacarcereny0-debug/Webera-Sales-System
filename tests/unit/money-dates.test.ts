@@ -24,7 +24,8 @@ describe("importes", () => {
   });
 
   it("formatea y vuelve a formulario", () => {
-    expect(formatCents(123456).replace(/ /g, " ")).toBe("1234,56 €".replace("1234", "1234"));
+    expect(formatCents(123456).replace(/\u00a0/g, " ")).toBe("1.234,56 €");
+    expect(formatCents(980000, { compact: true }).replace(/\u00a0/g, " ")).toBe("9.800 €");
     expect(centsToInput(123456)).toBe("1234,56");
     expect(parseDecimal("2,5")).toBe(2.5);
   });

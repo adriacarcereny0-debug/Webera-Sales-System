@@ -49,6 +49,7 @@ export async function renderQuotePdf(opts: { quote: QuoteRow; items: QuoteItemRo
 
         <View style={st.between}>
           <View style={{ maxWidth: 300 }}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text -- Image de react-pdf, no es <img> */}
             {logoSrc ? <Image src={logoSrc} style={{ maxHeight: 46, maxWidth: 170, objectFit: "contain", marginBottom: 6 }} /> : <Text style={{ fontSize: 14, fontFamily: "Helvetica-Bold", marginBottom: 4 }}>{company.name}</Text>}
             {company.legal_name && <Text style={st.small}>{company.legal_name}{company.tax_id ? ` · NIF ${company.tax_id}` : ""}</Text>}
             {(company.address || company.city) && <Text style={st.small}>{[company.address, [company.postal_code, company.city].filter(Boolean).join(" "), company.province].filter(Boolean).join(", ")}</Text>}

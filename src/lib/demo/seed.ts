@@ -149,7 +149,6 @@ export async function seedDemoData(tx: Q, companyId: string, users: DemoUsers, n
   const owner = (k: DemoContact["owner"]) => (k ? users[k] : null);
   const company = await one<{ quote_prefix: string; quote_validity_days: number }>(tx, `select quote_prefix, quote_validity_days from companies where id = $1`, [companyId]);
 
-  let quoteSeq = 0;
   const STAGE_ORDER = ["nuevo", "pendiente_contactar", "visita_programada", "presupuesto_enviado", "seguimiento", "ganado"];
 
   for (const [idx, c] of CONTACTS.entries()) {
@@ -200,7 +199,6 @@ export async function seedDemoData(tx: Q, companyId: string, users: DemoUsers, n
 
     // Presupuestos para oportunidades avanzadas.
     if (["presupuesto_enviado", "seguimiento", "ganado", "perdido"].includes(c.stage) && c.amount) {
-      quoteSeq++;
       const status = c.stage === "ganado" ? "aceptado" : c.stage === "perdido" ? "rechazado" : "enviado";
       const issue = workHours(new Date(created.getTime() + Math.min(c.daysAgo * 0.4, 6) * DAY), idx + 2);
       const lines = QUOTE_LINES[c.service] ?? QUOTE_LINES[0];
@@ -210,7 +208,8 @@ export async function seedDemoData(tx: Q, companyId: string, users: DemoUsers, n
       const items = lines.map(([d, q, u, p, t]) => ({ description: d, quantity: q, unit: u, unitPriceCents: Math.max(100, Math.round(p * factor) * 100), discountPct: 0, taxRate: t ?? 21 }));
       const totals = computeQuote(items);
       const year = issue.getUTCFullYear();
-      const code = `${company.quote_prefix}-${year}-${String(quoteSeq).padStart(4, "0")}`;
+      const n = Number((await one<{ n: string }>(tx, `select next_counter($1, $2) as n`, [companyId, `quote:${year}`])).n);
+      const code = `${company.quote_prefix}-${year}-${String(n).padStart(4, "0")}`;
       const sent = new Date(issue.getTime() + 2 * HOUR);
       const q = await one<{ id: string }>(
         tx,
@@ -218,7 +217,7 @@ export async function seedDemoData(tx: Q, companyId: string, users: DemoUsers, n
             subtotal_cents, tax_cents, total_cents, reviewed_by, reviewed_at, sent_at, decided_at, is_demo, created_by, created_at, updated_at)
          values ($1,$2,$3,$4,$5,$6,$7::date,($7::date + $8::int),$9,$10,$11,$12,$13,$14,$15,$16,$17,true,$14,$18,$18) returning id`,
         [
-          companyId, row.id, quoteSeq, code, `Presupuesto · ${services[c.service % services.length]?.name ?? "Instalación"}`, status,
+          companyId, row.id, n, code, `Presupuesto · ${services[c.service % services.length]?.name ?? "Instalación"}`, status,
           issue.toISOString().slice(0, 10), company.quote_validity_days,
           "Precios de ejemplo de la demostración: no corresponden a tarifas reales.",
           status === "enviado" ? "Llamar al cliente para resolver dudas" : null,
@@ -226,7 +225,6 @@ export async function seedDemoData(tx: Q, companyId: string, users: DemoUsers, n
           status === "enviado" ? null : new Date(sent.getTime() + 4 * DAY), issue,
         ],
       );
-      await tx.query(`insert into counters(company_id, key, value) values ($1, $2, $3) on conflict (company_id, key) do update set value = greatest(counters.value, excluded.value)`, [companyId, `quote:${year}`, quoteSeq]);
       await tx.query(`update contacts set estimated_amount_cents = $2 where id = $1`, [row.id, totals.subtotalCents]);
       for (const [pos, it] of items.entries()) {
         await tx.query(

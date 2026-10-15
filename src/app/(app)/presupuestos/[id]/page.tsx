@@ -55,7 +55,7 @@ export default async function QuotePage({ params, searchParams }: { params: Prom
       {quote.status === "borrador" && <Notice kind="warn" className="mb-5" title="Borrador pendiente de revisión">Revisa conceptos, cantidades, precios e IVA antes de enviarlo. El PDF de un borrador lleva la marca «BORRADOR».</Notice>}
       {expired && <Notice kind="warn" className="mb-5">La validez de este presupuesto terminó. Puedes marcarlo como caducado o duplicarlo con nueva fecha.</Notice>}
 
-      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="grid-cols-1 grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_20rem]">
         <QuoteDocument quote={quote} items={items} company={company} />
         <div className="space-y-5 xl:sticky xl:top-6">
           {canWrite && (

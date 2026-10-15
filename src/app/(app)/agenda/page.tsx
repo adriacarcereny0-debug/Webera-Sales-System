@@ -59,7 +59,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
           {tab("Solo visitas", q(mine ? "mias" : "todas", "visitas"), onlyVisits)}
         </div>
       </div>
-      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="grid-cols-1 grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="space-y-5">
           {pending.length === 0 ? (
             <Sheet><EmptyState title="Nada pendiente">{mine ? "No tienes tareas ni visitas pendientes." : "El equipo no tiene tareas pendientes."} Crea una desde el formulario o desde la ficha de un contacto.</EmptyState></Sheet>

@@ -88,7 +88,7 @@ export function QuoteDocument({ quote, items, company }: { quote: QuoteRow; item
       </div>
 
       {(quote.notes || quote.terms) && (
-        <div className="grid gap-5 border-t border-rule px-6 py-5 text-[0.82rem] md:grid-cols-2 md:px-10">
+        <div className="grid-cols-1 grid gap-5 border-t border-rule px-6 py-5 text-[0.82rem] md:grid-cols-2 md:px-10">
           {quote.notes && <div><p className="mb-1 font-semibold">Observaciones</p><p className="whitespace-pre-line text-ink-2">{quote.notes}</p></div>}
           {quote.terms && <div><p className="mb-1 font-semibold">Condiciones</p><p className="whitespace-pre-line text-ink-2">{quote.terms}</p></div>}
         </div>
