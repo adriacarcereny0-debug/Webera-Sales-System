@@ -20,21 +20,22 @@ export function StatusActions({ id, status, canReview }: { id: string; status: Q
   const next = QUOTE_TRANSITIONS[status];
   if (!next.length) return <p className="text-sm text-muted">Estado final. Para cambiar algo, duplica el presupuesto.</p>;
   return (
-    <form action={action} className="space-y-2">
-      <input type="hidden" name="id" value={id} />
+    <div className="space-y-2">
       {next.map((to) => {
         const m = LABELS[to]!;
         const blocked = to === "revisado" && !canReview;
         return (
-          <div key={to}>
-            <SubmitButton name="to" value={to} variant={m.variant} className="w-full" disabled={blocked} pendingLabel="Guardando…">{m.label}</SubmitButton>
+          <form key={to} action={action}>
+            <input type="hidden" name="id" value={id} />
+            <input type="hidden" name="to" value={to} />
+            <SubmitButton variant={m.variant} className="w-full" disabled={blocked} pendingLabel="Guardando…">{m.label}</SubmitButton>
             {blocked ? <p className="mt-1 text-[0.78rem] text-muted">La revisión la hace un administrador o el propietario.</p> :
               m.hint ? <p className="mt-1 text-[0.78rem] text-muted">{m.hint}</p> : null}
-          </div>
+          </form>
         );
       })}
       {state.error && <Notice kind="error">{state.error}</Notice>}
       {state.ok && <p role="status" className="text-[0.82rem] text-ok">{state.message}</p>}
-    </form>
+    </div>
   );
 }

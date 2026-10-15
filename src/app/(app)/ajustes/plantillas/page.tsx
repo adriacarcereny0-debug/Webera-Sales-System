@@ -18,7 +18,7 @@ export default async function TemplatesPage() {
       {tpls.map((t) => (
         <Sheet key={t.key}>
           <SheetHeader title={t.name} />
-          <TemplateForm k={t.key} name={t.name} subject={t.subject} body={t.body} vars={TEMPLATE_VARIABLES[t.key] ?? []} />
+          <TemplateForm k={t.key} subject={t.subject} body={t.body} vars={TEMPLATE_VARIABLES[t.key] ?? []} />
         </Sheet>
       ))}
     </div>

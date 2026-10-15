@@ -1,0 +1,28 @@
+{
+  "northStar": "El talonario del instalador",
+  "ramps": {
+    "brand": { "base": "#23408e", "ink": "color-mix(in oklab, var(--brand) 42%, #0c1229)", "soft": "color-mix(in oklab, var(--brand) 9%, white)", "line": "color-mix(in oklab, var(--brand) 28%, white)" },
+    "copies": {
+      "blanca": { "bg": "#ffffff", "fg": "#3a4256", "line": "#cbd0db" },
+      "amarilla": { "bg": "#fbf1c7", "fg": "#654e00", "line": "#e6d27e" },
+      "azul": { "bg": "#e4ebfb", "fg": "#233f87", "line": "#b9c8ee" },
+      "rosa": { "bg": "#fbe3ea", "fg": "#8a2041", "line": "#eebaca" },
+      "oro": { "bg": "#f8e6c8", "fg": "#744605", "line": "#e3c088" },
+      "verde": { "bg": "#dff1e4", "fg": "#1b5a31", "line": "#a6d6b3" },
+      "gris": { "bg": "#eceef2", "fg": "#4a5163", "line": "#d0d4dd" }
+    }
+  },
+  "shadows": {
+    "sheet": "0 1px 2px rgb(21 27 44 / 0.05), 0 2px 8px -2px rgb(21 27 44 / 0.06)",
+    "lift": "0 2px 4px rgb(21 27 44 / 0.06), 0 12px 32px -8px rgb(21 27 44 / 0.18)"
+  },
+  "motion": { "easeOut": "cubic-bezier(0.22, 1, 0.36, 1)", "durationMs": 150, "reducedMotion": "respetado globalmente" },
+  "breakpoints": { "md": "768px (barra lateral)", "lg": "1024px (ficha matriz | hoja)", "xl": "1280px" },
+  "components": {
+    "folio": { "html": "<span class=\"folio\"><span>Nº</span> 000123</span>", "css": ".folio{color:#c22d29;font-stretch:72%;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em}" },
+    "chip-stage": { "html": "<span class=\"tint-amarilla tint-chip\">Pendiente</span>", "css": ".tint-chip{background:var(--t-bg);color:var(--t-fg);box-shadow:inset 0 0 0 1px var(--t-line);border-radius:4px;padding:0 8px;height:24px}" },
+    "perforation": { "css": ".perforation-y{background-image:radial-gradient(circle,#c9ced8 1.4px,transparent 1.6px);background-size:2px 9px;width:2px}" }
+  },
+  "rules": ["La regla de las copias", "La regla del folio", "La regla de las cifras"],
+  "notCanonized": []
+}

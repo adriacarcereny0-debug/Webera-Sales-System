@@ -13,7 +13,7 @@ const SAMPLE: Record<string, string> = {
   lugar: "Dirección de la visita", horas: "4",
 };
 
-export function TemplateForm({ k, name, subject, body, vars }: { k: string; name: string; subject: string; body: string; vars: string[] }) {
+export function TemplateForm({ k, subject, body, vars }: { k: string; subject: string; body: string; vars: string[] }) {
   const [state, action] = useActionState(saveTemplate, {});
   const [subj, setSubj] = useState(subject);
   const [text, setText] = useState(body);

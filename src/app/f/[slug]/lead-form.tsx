@@ -29,8 +29,8 @@ export function LeadForm({
     return (
       <div role="status" className="overflow-hidden rounded-lg bg-sheet shadow-sheet ring-1 ring-rule">
         <div className="tint-verde border-b border-[var(--t-line)] bg-[var(--t-bg)] px-6 py-5 text-[var(--t-fg)]">
-          <p className="text-[0.75rem] font-medium tracking-[0.1em] uppercase opacity-80">Solicitud recibida</p>
-          <p className="folio mt-1 text-[2rem] leading-none">Nº {state.folio}</p>
+          <h2 className="text-[1.05rem] font-semibold">Solicitud recibida</h2>
+          <p className="folio mt-1.5 text-[2rem] leading-none">Nº {state.folio}</p>
         </div>
         <div className="space-y-2 px-6 py-5 text-[0.95rem] text-ink-2">
           <p>{thanks || "Gracias. Hemos recibido tu solicitud y te contactaremos lo antes posible."}</p>

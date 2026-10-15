@@ -57,7 +57,7 @@ export function PipelineBoard({ cards, canWrite, closedLimitNote }: { cards: Boa
                 onDragOver={(e) => { if (canWrite && dragId) { e.preventDefault(); setOver(stage); } }}
                 onDragLeave={() => setOver((o) => (o === stage ? null : o))}
                 onDrop={(e) => { e.preventDefault(); setOver(null); if (dragId) move(dragId, stage); setDragId(null); }}
-                className={cn("flex max-h-[calc(100dvh-13rem)] min-h-64 flex-col rounded-lg bg-[color-mix(in_oklab,var(--paper)_60%,var(--rule))] transition-shadow",
+                className={cn("flex min-h-64 flex-col md:max-h-[calc(100dvh-13rem)] rounded-lg bg-[color-mix(in_oklab,var(--paper)_60%,var(--rule))] transition-shadow",
                   over === stage && "shadow-[inset_0_0_0_2px_var(--brand)]")}>
                 <header className={cn(meta.tint, "rounded-t-lg border-b border-[var(--t-line)] bg-[var(--t-bg)] px-3 py-2.5 text-[var(--t-fg)]")}>
                   <div className="flex items-baseline justify-between gap-2">

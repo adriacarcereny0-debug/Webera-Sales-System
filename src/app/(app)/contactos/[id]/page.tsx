@@ -86,10 +86,7 @@ export default async function ContactPage({ params, searchParams }: { params: Pr
           <Sheet className="overflow-hidden">
             <div className={`${STAGE_META[c.stage].tint} border-b border-[var(--t-line)] bg-[var(--t-bg)] px-4 py-4`}>
               <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-[0.72rem] font-medium tracking-[0.08em] text-[var(--t-fg)] uppercase opacity-80">Matriz</p>
-                  <Folio n={c.folio} className="mt-1 block text-[1.9rem] leading-none" />
-                </div>
+                <Folio n={c.folio} className="block text-[1.9rem] leading-none" />
                 <StageChip stage={c.stage} />
               </div>
               <p className="mt-3 text-[0.8rem] text-[var(--t-fg)]">Entrada el {fmtDate(c.created_at)} · {SOURCES[c.source]}</p>

@@ -168,7 +168,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <Sheet>
             <SheetHeader title="Valor abierto por fase" description="Importe estimado sin IVA." actions={<Link href="/pipeline" className="text-[0.84rem] text-brand hover:underline">Pipeline</Link>} />
             <div className="p-4 md:p-5">
-              <BarList title="Valor abierto por fase" data={byStage.map((b) => ({ label: STAGE_META[b.stage].label, value: Number(b.cents), display: `${formatCents(b.cents, { compact: true })} · ${b.n}`, hint: `${b.n} oportunidades` }))} />
+              <BarList title="Valor abierto por fase" data={byStage.map((b) => ({ label: STAGE_META[b.stage].label, value: Number(b.cents), display: Number(b.cents) ? `${formatCents(b.cents, { compact: true })} · ${b.n}` : `Sin importe · ${b.n}`, hint: `${b.n} oportunidades` }))} />
             </div>
           </Sheet>
           <Sheet>

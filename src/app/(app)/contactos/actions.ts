@@ -99,11 +99,6 @@ export async function moveStage(_: ActionState | undefined, fd: FormData): Promi
   return changed ? { ok: true, message: `Movido a «${STAGE_META[stage as keyof typeof STAGE_META].label}».` } : { ok: true, message: "Sin cambios." };
 }
 
-/** Variante para formularios simples (pipeline): sin estado de retorno. */
-export async function moveStageForm(fd: FormData) {
-  await moveStage(undefined, fd);
-}
-
 const noteForm = z.object({
   contact_id: z.string().uuid(),
   type: z.enum(["nota", "llamada", "email", "whatsapp", "visita"]),
