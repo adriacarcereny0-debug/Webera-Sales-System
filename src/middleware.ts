@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PREFIXES = ["/login", "/f/", "/p/", "/api/public/", "/api/cron/", "/fonts/", "/_next/", "/favicon", "/robots.txt"];
+const PUBLIC_PREFIXES = ["/login", "/f/", "/p/", "/api/public/", "/api/cron/", "/fonts/", "/_next/", "/favicon", "/robots.txt", "/sitemap.xml", "/landing/"];
 
 /**
  * Filtro rápido: sin cookie de sesión, las rutas privadas redirigen al acceso.

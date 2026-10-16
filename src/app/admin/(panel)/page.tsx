@@ -15,8 +15,10 @@ export const metadata: Metadata = { title: "Resumen" };
 
 export default async function AdminHome() {
   const s = await requireAdmin();
-  const { companies, totals, audit } = await withSystem(async (tx) => ({
+  const { companies, leads, totals, audit } = await withSystem(async (tx) => ({
     companies: await listCompanies(tx),
+    leads: await tx.query<{ id: string; name: string; company: string; city: string | null; created_at: string }>(
+      `select id, name, company, city, created_at from platform_leads where status = 'nueva' order by created_at desc limit 5`),
     totals: (await tx.one<{ users: number; logins_7: number; contacts_30: number; quotes_30: number }>(`
       select (select count(*)::int from users where active) as users,
              (select count(*)::int from users where last_login_at > now() - interval '7 days') as logins_7,
@@ -37,6 +39,21 @@ export default async function AdminHome() {
     <>
       <PageHeader title={`Hola, ${s.admin.name.split(" ")[0]}`} description="Estado de todas las empresas que usan Webera Sales System."
         actions={<ButtonLink href="/admin/empresas/nueva" variant="primary"><Plus className="size-4" strokeWidth={2} aria-hidden />Alta de cliente</ButtonLink>} />
+      {leads.length > 0 && (
+        <Sheet className="mb-6">
+          <SheetHeader title={`Solicitudes de demostración nuevas (${leads.length === 5 ? "5+" : leads.length})`}
+            actions={<Link href="/admin/solicitudes" className="text-[0.84rem] text-brand hover:underline">Ver todas</Link>} />
+          <ul className="divide-y divide-rule">
+            {leads.map((l) => (
+              <li key={l.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 md:px-5">
+                <span className="min-w-0 text-[0.88rem]"><span className="font-medium">{l.company}</span> · {l.name}{l.city && ` · ${l.city}`}
+                  <span className="ml-2 text-[0.78rem] text-muted">{relative(l.created_at)}</span></span>
+                <Link href={`/admin/empresas/nueva?solicitud=${l.id}`} className="text-[0.84rem] font-medium text-brand hover:underline">Dar de alta</Link>
+              </li>
+            ))}
+          </ul>
+        </Sheet>
+      )}
       <section aria-label="Indicadores" className="mb-6 overflow-hidden rounded-lg bg-sheet shadow-sheet ring-1 ring-rule">
         <ul className="-mr-px -mb-px grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map((x) => (

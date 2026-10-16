@@ -9,4 +9,8 @@ export const ACTION_LABELS: Record<string, string> = {
   "admin.crear": "añadió un administrador",
   "admin.estado": "activó o desactivó un administrador",
   "admin.contrasena": "cambió su contraseña",
+  "solicitud.actualizar": "actualizó una solicitud de demo",
+  "correo.conectar": "conectó el correo de Webera",
+  "correo.desconectar": "desconectó el correo de Webera",
+  "correo.avisos": "cambió los avisos de solicitudes",
 };

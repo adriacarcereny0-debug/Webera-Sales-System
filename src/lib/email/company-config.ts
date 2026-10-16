@@ -51,7 +51,7 @@ export async function getCompanyEmailStatus(companyId: string): Promise<CompanyE
     const r = await tx.one<Row>(`select * from company_email_settings where company_id = $1`, [companyId]);
     const sent = await tx.one<{ n: number }>(
       `select count(*)::int as n from email_outbox where company_id = $1 and status = 'aceptado' and sent_at >= date_trunc('month', now())`, [companyId]);
-    const platformConfigured = emailConfigStatus().configured;
+    const platformConfigured = emailConfigStatus().configured || !!(await tx.one(`select 1 from platform_settings where id and provider is not null and secret_enc is not null`));
     return {
       own: r ? {
         provider: r.provider, fromEmail: r.from_email, smtpHost: r.smtp_host, smtpPort: r.smtp_port, smtpSecure: r.smtp_secure, smtpUser: r.smtp_user,

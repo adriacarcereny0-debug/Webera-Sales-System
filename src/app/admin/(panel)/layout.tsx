@@ -1,5 +1,6 @@
 import { LogOut } from "lucide-react";
 import { requireAdmin } from "@/lib/auth/admin-session";
+import { withSystem } from "@/lib/db";
 import { WeberaWordmark } from "@/components/brand/webera-mark";
 import { adminLogout } from "../actions";
 import { AdminNav } from "./admin-nav";
@@ -8,6 +9,7 @@ export const metadata = { title: { default: "Consola", template: "%s · Consola 
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const s = await requireAdmin();
+  const newLeads = await withSystem(async (tx) => (await tx.one<{ n: number }>(`select count(*)::int as n from platform_leads where status = 'nueva'`))?.n ?? 0);
   return (
     <div className="min-h-dvh">
       <header className="bg-[#0c1229] text-white">
@@ -25,7 +27,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </form>
           </div>
         </div>
-        <div className="mx-auto mt-3 max-w-[84rem] px-4 md:px-8"><AdminNav /></div>
+        <div className="mx-auto mt-3 max-w-[84rem] px-4 md:px-8"><AdminNav newLeads={newLeads} /></div>
       </header>
       <main id="contenido" className="mx-auto max-w-[84rem] px-4 pt-7 pb-16 md:px-8 md:pt-9">{children}</main>
     </div>

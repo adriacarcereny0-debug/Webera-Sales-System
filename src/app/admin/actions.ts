@@ -89,6 +89,7 @@ export async function createCompany(_: CredentialState, fd: FormData): Promise<C
   const pw = resolvePassword(fd);
   if (pw.error) return { error: pw.error, fieldErrors: { password: pw.error } };
   const mustChange = fd.get("must_change") === "on";
+  const leadId = z.string().uuid().safeParse(fd.get("lead_id")).data ?? null;
   const hashed = await hashPassword(pw.password!);
   const res = await withSystem(async (tx) => {
     if (await tx.one(`select 1 from companies where slug = $1`, [slug])) return { error: "Ya existe una empresa con ese identificador.", field: "slug" };
@@ -101,6 +102,8 @@ export async function createCompany(_: CredentialState, fd: FormData): Promise<C
       `insert into users(company_id, email, name, password_hash, role, must_change_password) values ($1,$2,$3,$4,'propietario',$5) returning id`,
       [c!.id, d.owner_email, d.owner_name, hashed, mustChange]);
     if (d.sample_data === "on") await seedDemoData(q(tx), c!.id, { owner: u!.id, s1: u!.id, s2: u!.id });
+    // Si viene de una solicitud de demostración, queda marcada como dada de alta.
+    if (leadId) await tx.query(`update platform_leads set status = 'alta', company_id = $2 where id = $1`, [leadId, c!.id]);
     await platformAudit(tx, s, "empresa.crear", { companyId: c!.id, target: slug, detail: { owner: d.owner_email, sample: d.sample_data === "on" } });
     return { id: c!.id };
   });

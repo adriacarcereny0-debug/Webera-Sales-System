@@ -85,7 +85,7 @@ export function StoryDeck({ tone = "dark" }: { tone?: "dark" | "light" }) {
             className={cn("inline-flex size-10 items-center justify-center rounded-full transition-colors", light ? "text-ink-2 ring-1 ring-rule-strong hover:bg-sheet" : "text-white/80 ring-1 ring-white/25 hover:bg-white/10")}>
             <ArrowLeft className="size-4" strokeWidth={1.75} />
           </button>
-          <button type="button" onClick={() => go(i + 1)} className={cn("inline-flex h-10 items-center gap-2 rounded-full px-4 text-[0.9rem] font-medium transition-colors",
+          <button type="button" onClick={() => go(i + 1)} className={cn("inline-flex h-10 items-center gap-2 rounded-full px-4 text-[0.9rem] whitespace-nowrap font-medium transition-colors",
             light ? "bg-brand text-brand-contrast hover:bg-[color-mix(in_oklab,var(--brand)_88%,black)]" : "bg-white text-[#0c1229] hover:bg-white/90")}>
             {i === n - 1 ? "Volver a empezar" : "Siguiente paso"}<ArrowRight className="size-4" strokeWidth={2} aria-hidden />
           </button>

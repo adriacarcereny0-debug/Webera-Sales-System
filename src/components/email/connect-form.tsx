@@ -1,7 +1,7 @@
 "use client";
 import { startTransition, useActionState, useState } from "react";
 import { LoaderCircle } from "lucide-react";
-import { saveEmailSettings, sendTestEmail } from "./actions";
+import type { ActionState } from "@/lib/action-state";
 import { Field, Input, Select } from "@/components/ui/field";
 import { Notice } from "@/components/ui/misc";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -17,9 +17,12 @@ const OPTIONS: { id: CompanyEmailProvider; title: string; text: string; badge?: 
 
 const ext = "text-brand underline underline-offset-2";
 
-export function EmailConnectForm({ own }: { own: CompanyEmailStatus["own"] }) {
+type EmailAction = (prev: ActionState, fd: FormData) => Promise<ActionState>;
+
+/** Lo usan tanto cada empresa (Ajustes › Correo) como Webera (/admin/correo): cambia solo la acción de guardar. */
+export function EmailConnectForm({ own, save }: { own: CompanyEmailStatus["own"]; save: EmailAction }) {
   const [provider, setProvider] = useState<CompanyEmailProvider>(own?.provider ?? "gmail");
-  const [state, action, pending] = useActionState(saveEmailSettings, {});
+  const [state, action, pending] = useActionState(save, {});
   const e = state.fieldErrors ?? {};
   const sameAsSaved = own?.provider === provider;
   const savedHint = sameAsSaved && own?.secretHint ? `Guardada (termina en ····${own.secretHint}). Déjala vacía para mantenerla.` : undefined;
@@ -127,8 +130,8 @@ export function EmailConnectForm({ own }: { own: CompanyEmailStatus["own"] }) {
   );
 }
 
-export function TestEmailButton() {
-  const [state, action] = useActionState(sendTestEmail, {});
+export function TestEmailButton({ test }: { test: () => Promise<ActionState> }) {
+  const [state, action] = useActionState(test, {});
   return (
     <form action={action} className="flex flex-wrap items-center gap-3">
       <SubmitButton variant="secondary" pendingLabel="Enviando…">Enviar otra prueba</SubmitButton>

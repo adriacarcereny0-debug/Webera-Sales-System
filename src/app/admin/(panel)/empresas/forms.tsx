@@ -23,11 +23,13 @@ function ColorInput({ name, defaultValue, error }: { name: string; defaultValue:
   );
 }
 
-export function NewCompanyForm({ appUrl }: { appUrl: string }) {
+export interface CompanyPrefill { leadId: string; name: string; ownerName: string; ownerEmail: string; note: string }
+
+export function NewCompanyForm({ appUrl, prefill }: { appUrl: string; prefill?: CompanyPrefill }) {
   const [state, action] = useActionState<CredentialState, FormData>(createCompany, {});
-  const [name, setName] = useState("");
+  const [name, setName] = useState(prefill?.name ?? "");
   const [slugTouched, setSlugTouched] = useState(false);
-  const [slug, setSlug] = useState("");
+  const [slug, setSlug] = useState(prefill ? slugify(prefill.name).slice(0, 50) : "");
   const e = state.fieldErrors ?? {};
   if (state.ok && state.credentials) {
     return (
@@ -44,6 +46,7 @@ export function NewCompanyForm({ appUrl }: { appUrl: string }) {
   return (
     <form action={action} className="space-y-0" noValidate>
       {state.error && <Notice kind="error" className="mb-5">{state.error}</Notice>}
+      {prefill && <input type="hidden" name="lead_id" value={prefill.leadId} />}
       <fieldset className="grid grid-cols-1 gap-x-8 gap-y-4 border-b border-rule pb-6 md:grid-cols-[13rem_minmax(0,1fr)]">
         <legend className="sr-only">Empresa</legend>
         <div aria-hidden><p className="font-semibold">Empresa</p><p className="mt-1 text-[0.8rem] text-muted">El instalador que contrata el servicio.</p></div>
@@ -56,7 +59,7 @@ export function NewCompanyForm({ appUrl }: { appUrl: string }) {
           </Field>
           <ColorInput name="brand_color" defaultValue="#23408e" error={e.brand_color} />
           <Field label="Nota interna" htmlFor="plan_note" optional hint="Plan contratado, fecha de renovación… Solo la ve Webera.">
-            <Textarea id="plan_note" name="plan_note" rows={2} />
+            <Textarea id="plan_note" name="plan_note" rows={2} defaultValue={prefill?.note} />
           </Field>
         </div>
       </fieldset>
@@ -64,8 +67,8 @@ export function NewCompanyForm({ appUrl }: { appUrl: string }) {
         <legend className="sr-only">Propietario</legend>
         <div aria-hidden><p className="font-semibold">Acceso del propietario</p><p className="mt-1 text-[0.8rem] text-muted">La persona que administrará la cuenta. Podrá invitar a su equipo.</p></div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Field label="Nombre" htmlFor="owner_name" error={e.owner_name}><Input id="owner_name" name="owner_name" required /></Field>
-          <Field label="Email (será su usuario)" htmlFor="owner_email" error={e.owner_email}><Input id="owner_email" name="owner_email" type="email" required /></Field>
+          <Field label="Nombre" htmlFor="owner_name" error={e.owner_name}><Input id="owner_name" name="owner_name" required defaultValue={prefill?.ownerName} /></Field>
+          <Field label="Email (será su usuario)" htmlFor="owner_email" error={e.owner_email}><Input id="owner_email" name="owner_email" type="email" required defaultValue={prefill?.ownerEmail} /></Field>
           <div className="sm:col-span-2"><PasswordFields idPrefix="owner" error={e.password} /></div>
           <Checkbox name="sample_data" className="sm:col-span-2" label="Cargar datos de ejemplo" hint="Contactos y presupuestos ficticios marcados como «Demo», que el cliente puede borrar con un clic." />
         </div>

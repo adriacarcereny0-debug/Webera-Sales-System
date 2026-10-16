@@ -3,6 +3,7 @@ import type { Tx } from "../db";
 import { withSystem } from "../db";
 import { sendEmail } from "./provider";
 import { loadCompanyTransport } from "./company-config";
+import { loadPlatformTransport } from "./platform-config";
 
 export const MAX_ATTEMPTS = 5;
 /** Espera antes de cada reintento (minutos): 1, 5, 30, 120, 360. */
@@ -38,7 +39,7 @@ export async function processOutbox(opts: { companyId?: string; limit?: number }
           order by o.next_attempt_at limit 1 for update of o skip locked`, [opts.companyId ?? null]);
       if (!m) return false;
       // Cada empresa envía con su propio correo; si no lo ha conectado, con el de la plataforma (si existe).
-      const transport = await loadCompanyTransport(tx, m.company_id);
+      const transport = (await loadCompanyTransport(tx, m.company_id)) ?? (await loadPlatformTransport(tx));
       const r = await sendEmail({ to: m.to_email, subject: m.subject, text: m.body_text, replyTo: m.reply_to, fromName: m.company_name }, transport);
       const attempts = m.attempts + 1;
       if (r.status === "accepted") {

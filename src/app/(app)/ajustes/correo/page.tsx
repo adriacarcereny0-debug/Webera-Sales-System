@@ -7,8 +7,8 @@ import { getCompanyEmailStatus, EMAIL_PROVIDER_LABELS } from "@/lib/email/compan
 import { fmtDateTime } from "@/lib/dates";
 import { Sheet, SheetHeader, Notice } from "@/components/ui/misc";
 import { ConfirmAction } from "@/components/ui/confirm";
-import { disconnectEmail } from "./actions";
-import { EmailConnectForm, TestEmailButton } from "./form";
+import { disconnectEmail, saveEmailSettings, sendTestEmail } from "./actions";
+import { EmailConnectForm, TestEmailButton } from "@/components/email/connect-form";
 
 export const metadata: Metadata = { title: "Correo de envío" };
 
@@ -56,7 +56,7 @@ export default async function EmailSettingsPage() {
           )}
           {own && (
             <div className="flex flex-wrap items-center gap-2 border-t border-rule pt-4">
-              <TestEmailButton />
+              <TestEmailButton test={sendTestEmail} />
               <ConfirmAction label="Desconectar" title="¿Desconectar este correo?" confirmLabel="Desconectar" action={disconnectEmail}>
                 Se borrará la contraseña guardada. Los avisos dejarán de enviarse por email hasta que conectes otro correo.
               </ConfirmAction>
@@ -68,7 +68,7 @@ export default async function EmailSettingsPage() {
       <Sheet>
         <SheetHeader title={own ? "Cambiar el correo conectado" : "Conectar tu correo"}
           description="Cada empresa usa su propio correo, así los avisos llevan tu dirección y tu límite de envío es solo tuyo." />
-        <EmailConnectForm own={own} />
+        <EmailConnectForm own={own} save={saveEmailSettings} />
       </Sheet>
 
       <Notice kind="info" title="Tu contraseña está protegida">
