@@ -80,8 +80,6 @@
   "countryCode": "es",
   "maxCrawledPlacesPerSearch": 8,
   "scrapeContacts": true,
-  "skipClosedPlaces": true,
-  "scrapePlaceDetailPage": false,
   "maxReviews": 0,
   "maxImages": 0
 }

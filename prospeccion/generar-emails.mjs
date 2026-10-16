@@ -58,8 +58,11 @@ function service(it) {
   if (/aire|climatiz|clima/.test(t)) return { key: "clima", label: "aire acondicionado" };
   return { key: "general", label: "instalaciones" };
 }
-const titleCase = (s) => s.trim();
-const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+// Quita las coletillas de SEO de Google Maps: «AVS Aerotermia Bilbao | Instaladores» → «AVS Aerotermia Bilbao».
+const cleanName = (s) => s.replace(/\p{Extended_Pictographic}|\uFE0F/gu, "").split(/\s*\|\|?\s*|:\s+|\s+[-–—]\s+|\s*\/\/\s*|(?<=\p{L}{4})\.\s+(?=\p{Lu}\p{Ll})/u)[0].replace(/[\s,;:–-]+$/, "").trim();
+const blank = (v) => (v == null || v === "null" || v === "undefined" ? "" : String(v).trim());
+const searchedCity = (it) => blank(pick(it, "searchString")).replace(/^instalador (aerotermia|aire acondicionado|placas solares)\s*/i, "");
+const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40).replace(/^-+|-+$/g, "");
 
 // ---------------------------------------------------------------------------
 // Selección: con email válido, sin duplicados, pymes primero
@@ -68,7 +71,7 @@ const seenEmail = new Set(), seenDomain = new Set(), seenName = new Set();
 const leads = [];
 for (const it of items) {
   if (String(pick(it, "permanentlyClosed")).toLowerCase() === "true" || String(pick(it, "temporarilyClosed")).toLowerCase() === "true") continue;
-  const name = titleCase(String(pick(it, "title", "name")));
+  const name = cleanName(blank(pick(it, "title", "name")));
   const emails = [...listOf(it, "emails"), pick(it, "email")].map((e) => String(e).trim().toLowerCase()).filter(isEmail).sort((a, b) => rankEmail(a) - rankEmail(b));
   if (!name || !emails.length) continue;
   const email = emails[0];
@@ -79,7 +82,7 @@ for (const it of items) {
   const reviews = Number(pick(it, "reviewsCount")) || 0;
   const score = Number(pick(it, "totalScore")) || 0;
   leads.push({
-    name, email, city: String(pick(it, "city")) || "", phone: String(pick(it, "phone", "phoneUnformatted")), website: String(pick(it, "website")),
+    name, email, city: blank(pick(it, "city")) || searchedCity(it), phone: String(pick(it, "phone", "phoneUnformatted")), website: String(pick(it, "website")),
     reviews, score, service: service(it), maps: String(pick(it, "url")),
     // Las grandes cadenas (cientos de reseñas) rara vez deciden por un email; las de 5–150 reseñas son el cliente ideal.
     priority: (reviews >= 5 && reviews <= 150 ? 0 : 1) + (pick(it, "website") ? 0 : 0.5) - Math.min(score, 5) / 10,
