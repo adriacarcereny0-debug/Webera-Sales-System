@@ -7,7 +7,7 @@ import { audit } from "@/lib/audit";
 import { hashPassword, passwordProblem, temporaryPassword, verifyPassword } from "@/lib/auth/password";
 import { sniffImage } from "@/lib/images";
 import { customFieldsSchema } from "@/lib/custom-fields";
-import { TEMPLATE_KEYS } from "@/lib/company-defaults";
+import { DEFAULT_TEMPLATES, TEMPLATE_KEYS } from "@/lib/company-defaults";
 import { emailSchema, optText, phoneSchema, postalCodeSchema, slugify } from "@/lib/validation";
 import { zodFieldErrors, type ActionState } from "@/lib/action-state";
 import { isRole } from "@/lib/permissions";
@@ -241,7 +241,10 @@ export async function saveTemplate(_: ActionState, fd: FormData): Promise<Action
   const parsed = templateSchema.safeParse(Object.fromEntries(fd));
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   await tenant(s, async (tx) => {
-    await tx.query(`update email_templates set subject = $2, body = $3 where key = $1`, [parsed.data.key, parsed.data.subject, parsed.data.body]);
+    await tx.query(
+      `insert into email_templates(company_id, key, name, subject, body) values (app_company_id(), $1, $4, $2, $3)
+       on conflict (company_id, key) do update set subject = excluded.subject, body = excluded.body`,
+      [parsed.data.key, parsed.data.subject, parsed.data.body, DEFAULT_TEMPLATES[parsed.data.key].name]);
     await audit(tx, s, "plantilla.guardar", "template", null, { key: parsed.data.key });
   });
   revalidatePath("/ajustes/plantillas");

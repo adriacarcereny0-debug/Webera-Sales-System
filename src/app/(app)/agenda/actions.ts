@@ -5,6 +5,7 @@ import { requireCapability, tenant } from "@/lib/auth/session";
 import { taskSchema } from "@/lib/validation";
 import { formValues, zodFieldErrors, type ActionState } from "@/lib/action-state";
 import { logActivity } from "@/server/contacts";
+import { onTaskDone, onVisitScheduled } from "@/server/automations";
 import { fmtDateTime } from "@/lib/dates";
 
 function refresh(contactId?: string | null) {
@@ -35,6 +36,7 @@ export async function createTask(_: ActionState, fd: FormData): Promise<ActionSt
       // Si se programa una visita, la próxima acción del contacto pasa a ser esa visita.
       if (t.kind === "visita") {
         await tx.query(`update contacts set next_action = $2, next_action_at = $3 where id = $1`, [t.contact_id, t.title, t.due_at]);
+        await onVisitScheduled(tx, t.contact_id, s.user.id);
       }
     }
     return null;
@@ -55,6 +57,7 @@ export async function toggleTask(fd: FormData) {
     if (t?.contact_id && t.done_at) {
       await logActivity(tx, { contactId: t.contact_id, userId: s.user.id, type: "tarea", body: `Completada: ${t.title}` });
     }
+    if (t?.done_at) await onTaskDone(tx, id);
     return t?.contact_id ?? null;
   });
   refresh(contactId);

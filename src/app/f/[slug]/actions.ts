@@ -8,7 +8,8 @@ import { sniffImage } from "@/lib/images";
 import { emailSchema, phoneSchema, optUuid } from "@/lib/validation";
 import { TIMEFRAMES } from "@/lib/stages";
 import { padFolio } from "@/lib/brand";
-import { notifyNewLead } from "@/server/automations";
+import { findOpenDuplicate, onNewLead } from "@/server/automations";
+import { logActivity } from "@/server/contacts";
 import { processOutbox } from "@/lib/email/outbox";
 import { zodFieldErrors } from "@/lib/action-state";
 
@@ -74,20 +75,42 @@ export async function submitLead(slug: string, _: LeadState, fd: FormData): Prom
 
   const folio = await withTenant({ companyId: company.id, userId: null }, async (tx) => {
     const serviceId = d.service_id && (await tx.one(`select 1 from services where id = $1 and active`, [d.service_id])) ? d.service_id : null;
-    const row = await tx.one<{ id: string; folio: string }>(
-      `insert into contacts(company_id, name, phone, email, city, postal_code, service_id, source, stage, timeframe, description, consent_at)
-       values (app_company_id(), $1, $2, $3, $4, $5, $6, 'formulario_web', 'nuevo', $7, $8, now()) returning id, folio`,
-      [d.name, d.phone, d.email, city, postal, serviceId, d.timeframe || null, d.description || null]);
-    await tx.query(`insert into stage_history(company_id, contact_id, from_stage, to_stage) values (app_company_id(), $1, null, 'nuevo')`, [row!.id]);
-    await tx.query(
-      `insert into activities(company_id, contact_id, type, body, meta) values (app_company_id(), $1, 'formulario', $2, $3)`,
-      [row!.id, "Solicitud recibida desde el formulario web.", JSON.stringify({ photos: photos.length, consent: "Política de privacidad aceptada en el formulario" })]);
+
+    // Cliente que ya estaba en la lista y vuelve a escribir: se añade a su ficha en lugar de duplicarla.
+    const dup = await findOpenDuplicate(tx, d.email ?? null, d.phone ?? null);
+    let contactId: string;
+    let contactFolio: string;
+    if (dup) {
+      contactId = dup.id;
+      contactFolio = dup.folio;
+      await tx.query(
+        `update contacts set
+           phone = coalesce(phone, $2), email = coalesce(email, $3), city = coalesce(city, $4), postal_code = coalesce(postal_code, $5),
+           service_id = coalesce(service_id, $6), timeframe = coalesce($7, timeframe), consent_at = now(),
+           description = case when $8::text is null then description
+                              when description is null then $8::text
+                              else description || E'\n\n— Nueva solicitud: ' || $8::text end
+         where id = $1`,
+        [contactId, d.phone, d.email, city, postal, serviceId, d.timeframe || null, d.description || null]);
+      await logActivity(tx, { contactId, type: "formulario", body: `Ha vuelto a escribir desde el formulario web${d.description ? `: «${d.description.slice(0, 300)}»` : "."}`, meta: { photos: photos.length, repeat: true } });
+    } else {
+      const row = await tx.one<{ id: string; folio: string }>(
+        `insert into contacts(company_id, name, phone, email, city, postal_code, service_id, source, stage, timeframe, description, consent_at)
+         values (app_company_id(), $1, $2, $3, $4, $5, $6, 'formulario_web', 'nuevo', $7, $8, now()) returning id, folio`,
+        [d.name, d.phone, d.email, city, postal, serviceId, d.timeframe || null, d.description || null]);
+      contactId = row!.id;
+      contactFolio = row!.folio;
+      await tx.query(`insert into stage_history(company_id, contact_id, from_stage, to_stage) values (app_company_id(), $1, null, 'nuevo')`, [contactId]);
+      await tx.query(
+        `insert into activities(company_id, contact_id, type, body, meta) values (app_company_id(), $1, 'formulario', $2, $3)`,
+        [contactId, "Solicitud recibida desde el formulario web.", JSON.stringify({ photos: photos.length, consent: "Política de privacidad aceptada en el formulario" })]);
+    }
     for (const p of photos) {
       await tx.query(`insert into attachments(company_id, contact_id, filename, mime, size_bytes, data) values (app_company_id(), $1, $2, $3, $4, $5)`,
-        [row!.id, p.name, p.mime, p.data.length, p.data]);
+        [contactId, p.name, p.mime, p.data.length, p.data]);
     }
-    await notifyNewLead(tx, row!.id);
-    return row!.folio;
+    await onNewLead(tx, contactId, { repeat: !!dup });
+    return contactFolio;
   });
 
   // 5. Intento de envío inmediato del aviso (si falla, queda en cola con reintentos).

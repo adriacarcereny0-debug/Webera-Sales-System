@@ -6,8 +6,11 @@ import { ForbiddenError, requireCapability, tenant } from "@/lib/auth/session";
 import { can } from "@/lib/permissions";
 import { computeQuote } from "@/lib/quotes/calc";
 import { parseDecimal, parseEuroToCents } from "@/lib/money";
+import { ensureQuoteToken, onQuoteStatus } from "@/server/automations";
+import { sendQuoteByEmail } from "@/server/quote-online";
+import { processOutbox } from "@/lib/email/outbox";
 import { canTransitionQuote, isQuoteStatus, QUOTE_STATUS, type QuoteStatus } from "@/lib/stages";
-import { changeStage, logActivity } from "@/server/contacts";
+import { logActivity } from "@/server/contacts";
 import { getCompany } from "@/server/company";
 import { nextQuoteCode } from "@/server/quotes";
 import { audit } from "@/lib/audit";
@@ -144,15 +147,8 @@ export async function setQuoteStatus(_: ActionState, fd: FormData): Promise<Acti
       caducado: `Presupuesto ${q.code} caducado sin respuesta.`,
     };
     await logActivity(tx, { contactId: q.contact_id, quoteId: parsed.data.id, userId: s.user.id, type: "presupuesto", body: labels[to], meta: { status: to } });
-    // Sincroniza la fase de la oportunidad.
-    const contact = await tx.one<{ stage: string }>(`select stage from contacts where id = $1`, [q.contact_id]);
-    if (to === "enviado" && contact && ["nuevo", "pendiente_contactar", "visita_programada"].includes(contact.stage)) {
-      await changeStage(tx, q.contact_id, "presupuesto_enviado", s.user.id, `Presupuesto ${q.code} enviado`, null);
-    }
-    if (to === "aceptado" && contact && contact.stage !== "ganado") {
-      await changeStage(tx, q.contact_id, "ganado", s.user.id, `Presupuesto ${q.code} aceptado`, null);
-      await tx.query(`update contacts set estimated_amount_cents = $2 where id = $1`, [q.contact_id, q.subtotal_cents]);
-    }
+    // Sincroniza la fase de la oportunidad (automatización «Mover la ficha de fase sola»).
+    await onQuoteStatus(tx, parsed.data.id, to, s.user.id);
     return { contactId: q.contact_id };
   });
   if ("error" in res) return { error: res.error };
@@ -202,4 +198,40 @@ export async function deleteQuote(fd: FormData) {
   });
   revalidatePath("/presupuestos");
   redirect(contactId ? `/contactos/${contactId}?aviso=eliminado` : "/presupuestos");
+}
+
+// ---------------------------------------------------------------------------
+// Envío al cliente por email con enlace para aceptar
+// ---------------------------------------------------------------------------
+const sendForm = z.object({ id: z.string().uuid(), to: z.string().trim().max(200).optional() });
+
+export async function sendQuoteEmail(_: ActionState, fd: FormData): Promise<ActionState> {
+  const s = await requireCapability("quotes.write");
+  const parsed = sendForm.safeParse(Object.fromEntries(fd));
+  if (!parsed.success) return { error: "Datos no válidos." };
+  const res = await tenant(s, (tx) => sendQuoteByEmail(tx, parsed.data.id, s.user.id, parsed.data.to || null));
+  if ("error" in res) return { error: res.error };
+  const out = await processOutbox({ companyId: s.company.id, limit: 5 }).catch(() => null);
+  revalidatePath(`/presupuestos/${parsed.data.id}`);
+  revalidatePath("/presupuestos");
+  revalidatePath("/panel");
+  if (out && out.notConfigured) return { ok: true, message: `Preparado para ${res.to}, pero no ha salido: falta conectar el correo de envío en Ajustes › Correo de envío. Puedes copiar el enlace y mandarlo por WhatsApp.` };
+  return { ok: true, message: `Enviado a ${res.to}. Cuando lo acepte, la ficha pasará sola a «Ganado» y te avisaremos.` };
+}
+
+/** Crea el enlace del cliente sin enviar email (para mandarlo por WhatsApp). Si estaba revisado, pasa a enviado. */
+export async function createQuoteLink(fd: FormData) {
+  const s = await requireCapability("quotes.write");
+  const id = z.string().uuid().parse(fd.get("id"));
+  await tenant(s, async (tx) => {
+    const q = await tx.one<{ status: string; code: string; contact_id: string }>(`select status, code, contact_id from quotes where id = $1 for update`, [id]);
+    if (!q || (q.status !== "revisado" && q.status !== "enviado")) return;
+    await ensureQuoteToken(tx, id);
+    if (q.status === "revisado") {
+      await tx.query(`update quotes set status = 'enviado', sent_at = now() where id = $1`, [id]);
+      await logActivity(tx, { contactId: q.contact_id, quoteId: id, userId: s.user.id, type: "presupuesto", body: `Presupuesto ${q.code} enviado al cliente mediante enlace.`, meta: { status: "enviado" } });
+      await onQuoteStatus(tx, id, "enviado", s.user.id);
+    }
+  });
+  revalidatePath(`/presupuestos/${id}`);
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireSession, tenant } from "@/lib/auth/session";
 import { can } from "@/lib/permissions";
-import { AUTOMATION_DEFAULTS, AUTOMATION_KEYS, type AutomationConfig, type AutomationKey } from "@/lib/company-defaults";
+import { AUTOMATION_DEFAULTS, AUTOMATION_GROUPS, AUTOMATION_KEYS, type AutomationConfig, type AutomationGroup, type AutomationKey } from "@/lib/company-defaults";
 import { getCompanyEmailStatus, EMAIL_PROVIDER_LABELS } from "@/lib/email/company-config";
 import { env } from "@/lib/env";
 import { fmtDateTime } from "@/lib/dates";
@@ -39,7 +39,7 @@ export default async function AutomationsPage() {
     <>
       <PageHeader
         title="Automatizaciones"
-        description="Avisos y tareas que el sistema crea solo. Cada una se puede activar o desactivar, y todo lo que hace queda registrado abajo."
+        description="El sistema trabaja solo: contesta a los clientes, reparte el trabajo, mueve las fichas y os recuerda lo pendiente. Vienen activadas; puedes apagar o ajustar cualquiera. Todo lo que hacen queda registrado abajo."
         actions={canManage ? <RunNowForm /> : undefined}
       />
 
@@ -63,25 +63,32 @@ export default async function AutomationsPage() {
         </Notice>
       )}
 
-      <Sheet className="mb-6">
-        <ol className="divide-y divide-rule">
-          {AUTOMATION_KEYS.map((k) => {
-            const d = AUTOMATION_DEFAULTS[k];
-            const a = byKey[k];
-            return (
-              <li key={k} className="grid-cols-1 grid gap-5 px-4 py-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:px-6">
-                <div>
-                  <h2 className="font-semibold text-ink">{d.title}</h2>
-                  <p className="mt-1 max-w-[52ch] text-[0.88rem] text-muted text-pretty">{d.description}</p>
-                  {k === "aviso_nueva_solicitud" && <p className="mt-2 text-[0.8rem] text-muted">Se dispara al instante al recibir la solicitud.</p>}
-                  {k !== "aviso_nueva_solicitud" && <p className="mt-2 text-[0.8rem] text-muted">Se comprueba en cada ejecución programada o al pulsar «Ejecutar ahora». No se repite para el mismo caso.</p>}
-                </div>
-                <AutomationForm k={k} title={d.title} enabled={a?.enabled ?? false} config={{ ...d.config, ...(a?.config ?? {}) }} canManage={canManage} />
-              </li>
-            );
-          })}
-        </ol>
-      </Sheet>
+      <div className="mb-6 space-y-6">
+        {(Object.keys(AUTOMATION_GROUPS) as AutomationGroup[]).map((g) => (
+          <section key={g} aria-labelledby={`grupo-${g}`}>
+            <h2 id={`grupo-${g}`} className="text-[1.05rem] font-semibold text-ink">{AUTOMATION_GROUPS[g].title}</h2>
+            <p className="mb-3 text-[0.86rem] text-muted">{AUTOMATION_GROUPS[g].description}</p>
+            <Sheet>
+              <ol className="divide-y divide-rule">
+                {AUTOMATION_KEYS.filter((k) => AUTOMATION_DEFAULTS[k].group === g).map((k) => {
+                  const d = AUTOMATION_DEFAULTS[k];
+                  const a = byKey[k];
+                  return (
+                    <li key={k} className="grid-cols-1 grid gap-5 px-4 py-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:px-6">
+                      <div>
+                        <h3 className="font-semibold text-ink">{d.title}</h3>
+                        <p className="mt-1 max-w-[52ch] text-[0.88rem] text-muted text-pretty">{d.description}</p>
+                        <p className="mt-2 text-[0.78rem] text-muted"><span className="tint-gris tint-chip rounded-[4px] px-1.5 py-0.5 font-medium">{d.when}</span></p>
+                      </div>
+                      <AutomationForm k={k} title={d.title} enabled={a ? a.enabled : d.enabledByDefault} config={{ ...d.config, ...(a?.config ?? {}) }} canManage={canManage} />
+                    </li>
+                  );
+                })}
+              </ol>
+            </Sheet>
+          </section>
+        ))}
+      </div>
 
       <div className="grid-cols-1 grid items-start gap-5 xl:grid-cols-2">
         <Sheet>

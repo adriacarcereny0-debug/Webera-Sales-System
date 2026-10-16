@@ -23,7 +23,22 @@ export function Toggle({ name, defaultChecked, label, onChange }: { name: string
   );
 }
 
+const LABELS: Partial<Record<AutomationKey, { days?: string; hours?: string; hoursBefore?: string; createTask?: string; sendEmail?: string }>> = {
+  seguimiento_presupuesto: { days: "Días sin novedades", createTask: "Crear tarea de seguimiento", sendEmail: "Avisar por email al responsable" },
+  seguimiento_cliente: { days: "Días después de enviarlo", sendEmail: "Enviar el correo al cliente" },
+  tarea_contacto_nuevo: { hours: "Horas sin llamar", createTask: "Crear tarea «Llamar»", sendEmail: "Avisar por email al responsable" },
+  asignacion_automatica: { hours: "Llamar antes de (horas)" },
+  recordatorio_visita: { hoursBefore: "Horas antes de la visita", sendEmail: "Enviar el correo" },
+  recordatorio_visita_cliente: { hoursBefore: "Horas antes de la visita", sendEmail: "Enviar el correo" },
+  caducar_presupuestos: { createTask: "Crear tarea para llamar al cliente" },
+  tarea_tras_visita: { createTask: "Crear la tarea" },
+  respuesta_cliente: { sendEmail: "Enviar el correo" },
+  aviso_nueva_solicitud: { sendEmail: "Enviar el correo" },
+  resumen_diario: { sendEmail: "Enviar el resumen" },
+};
+
 export function AutomationForm({ k, title, enabled, config, canManage }: { k: AutomationKey; title: string; enabled: boolean; config: AutomationConfig; canManage: boolean }) {
+  const L = LABELS[k] ?? {};
   const [state, action] = useActionState(saveAutomation, {});
   return (
     <form action={action} className="space-y-4">
@@ -32,13 +47,13 @@ export function AutomationForm({ k, title, enabled, config, canManage }: { k: Au
         <Toggle name="enabled" defaultChecked={enabled} label={`Activar «${title}»`} />
         <div className="grid-cols-1 grid gap-3 sm:grid-cols-2">
           {config.days !== undefined && (
-            <Field label="Días sin seguimiento" htmlFor={`${k}-days`}><Input id={`${k}-days`} name="days" type="number" min={1} max={60} defaultValue={config.days} /></Field>
+            <Field label={L.days ?? "Días"} htmlFor={`${k}-days`}><Input id={`${k}-days`} name="days" type="number" min={1} max={60} defaultValue={config.days} /></Field>
           )}
           {config.hours !== undefined && (
-            <Field label="Horas en «Nuevo contacto»" htmlFor={`${k}-hours`}><Input id={`${k}-hours`} name="hours" type="number" min={1} max={240} defaultValue={config.hours} /></Field>
+            <Field label={L.hours ?? "Horas"} htmlFor={`${k}-hours`}><Input id={`${k}-hours`} name="hours" type="number" min={1} max={240} defaultValue={config.hours} /></Field>
           )}
           {config.hoursBefore !== undefined && (
-            <Field label="Horas de antelación" htmlFor={`${k}-hb`}><Input id={`${k}-hb`} name="hoursBefore" type="number" min={1} max={168} defaultValue={config.hoursBefore} /></Field>
+            <Field label={L.hoursBefore ?? "Horas de antelación"} htmlFor={`${k}-hb`}><Input id={`${k}-hb`} name="hoursBefore" type="number" min={1} max={168} defaultValue={config.hoursBefore} /></Field>
           )}
           {config.recipients !== undefined && (
             <Field label="Destinatarios" htmlFor={`${k}-rcp`} className="sm:col-span-2" hint="Separados por comas. Si lo dejas vacío, se usan los emails de aviso de Ajustes › Empresa o, en su defecto, los administradores.">
@@ -47,8 +62,8 @@ export function AutomationForm({ k, title, enabled, config, canManage }: { k: Au
           )}
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-2">
-          {config.createTask !== undefined && <Checkbox name="createTask" defaultChecked={config.createTask} label="Crear tarea" />}
-          {config.sendEmail !== undefined && <Checkbox name="sendEmail" defaultChecked={config.sendEmail} label="Enviar email" />}
+          {config.createTask !== undefined && <Checkbox name="createTask" defaultChecked={config.createTask} label={L.createTask ?? "Crear tarea"} />}
+          {config.sendEmail !== undefined && <Checkbox name="sendEmail" defaultChecked={config.sendEmail} label={L.sendEmail ?? "Enviar email"} />}
         </div>
       </fieldset>
       {canManage && <SubmitButton variant="secondary" pendingLabel="Guardando…">Guardar</SubmitButton>}

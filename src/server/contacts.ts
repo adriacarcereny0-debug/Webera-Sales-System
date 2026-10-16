@@ -132,7 +132,7 @@ export async function listServices(tx: Tx, onlyActive = true) {
   );
 }
 
-export async function changeStage(tx: Tx, contactId: string, to: Stage, userId: string, note: string | null, lostReason: string | null) {
+export async function changeStage(tx: Tx, contactId: string, to: Stage, userId: string | null, note: string | null, lostReason: string | null) {
   const cur = await tx.one<{ stage: Stage }>(`select stage from contacts where id = $1 for update`, [contactId]);
   if (!cur) throw new Error("Contacto no encontrado");
   if (cur.stage === to) return false;

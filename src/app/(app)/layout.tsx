@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { after } from "next/server";
+import { maybeAutoRun } from "@/server/automations";
 import { LogOut, UserRound } from "lucide-react";
 import { requireSession, tenant } from "@/lib/auth/session";
 import { brandStyle } from "@/lib/brand";
@@ -11,6 +13,9 @@ import { WeberaMark } from "@/components/brand/webera-mark";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const s = await requireSession({ allowPasswordChange: true });
+  // Las automatizaciones se ejecutan solas mientras se usa la aplicación (como mucho cada 15 minutos por empresa).
+  const companyId = s.company.id;
+  after(() => maybeAutoRun(companyId));
   const counts = await tenant(s, (tx) =>
     tx.one<{ overdue: number; fresh: number }>(
       `select

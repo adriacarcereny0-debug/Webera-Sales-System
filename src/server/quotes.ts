@@ -7,6 +7,7 @@ export interface QuoteRow {
   issue_date: string; valid_until: string; notes: string | null; next_step: string | null; terms: string | null;
   subtotal_cents: string; tax_cents: string; total_cents: string; reviewed_by: string | null; reviewer_name: string | null;
   reviewed_at: string | null; sent_at: string | null; decided_at: string | null; is_demo: boolean; created_at: string; updated_at: string;
+  public_token: string | null; client_viewed_at: string | null; client_note: string | null; emailed_at: string | null; emailed_to: string | null;
   creator_name: string | null; contact_name: string; contact_folio: string; contact_company: string | null; contact_email: string | null;
   contact_phone: string | null; contact_address: string | null; contact_city: string | null; contact_postal_code: string | null;
 }

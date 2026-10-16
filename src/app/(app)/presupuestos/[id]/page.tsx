@@ -14,7 +14,10 @@ import { Flash } from "@/components/ui/flash";
 import { ConfirmAction } from "@/components/ui/confirm";
 import { QuoteDocument } from "@/components/quote-document";
 import { StatusActions } from "./status-actions";
-import { deleteQuote, duplicateQuote } from "../actions";
+import { SendQuoteForm } from "./send-quote";
+import { CopyField } from "@/components/ui/copy-field";
+import { env } from "@/lib/env";
+import { createQuoteLink, deleteQuote, duplicateQuote } from "../actions";
 
 export const metadata: Metadata = { title: "Presupuesto" };
 
@@ -58,6 +61,31 @@ export default async function QuotePage({ params, searchParams }: { params: Prom
       <div className="grid-cols-1 grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_20rem]">
         <QuoteDocument quote={quote} items={items} company={company} />
         <div className="space-y-5 xl:sticky xl:top-6">
+          {canWrite && (quote.status === "revisado" || quote.status === "enviado") && !expired && (
+            <Sheet>
+              <SheetHeader title="Enviar al cliente" description="Lo recibe por email y lo acepta desde el móvil." />
+              <div className="space-y-4 p-4">
+                <SendQuoteForm id={quote.id} email={quote.emailed_to ?? quote.contact_email} again={!!quote.emailed_at} />
+                {quote.public_token ? (
+                  <div className="space-y-1.5 border-t border-rule pt-4">
+                    <CopyField value={`${env.appUrl}/p/${quote.public_token}`} label="Enlace del cliente (para WhatsApp)" />
+                    <p className="text-[0.78rem] text-muted">
+                      {quote.emailed_at ? `Enviado a ${quote.emailed_to} el ${fmtDateTime(quote.emailed_at)}. ` : ""}
+                      {quote.client_viewed_at ? `El cliente lo abrió el ${fmtDateTime(quote.client_viewed_at)}.` : "El cliente aún no lo ha abierto."}
+                    </p>
+                  </div>
+                ) : (
+                  <form action={createQuoteLink} className="border-t border-rule pt-4">
+                    <input type="hidden" name="id" value={quote.id} />
+                    <button type="submit" className={buttonClass("secondary", "sm", "w-full")}>Crear enlace para WhatsApp</button>
+                  </form>
+                )}
+              </div>
+            </Sheet>
+          )}
+          {canWrite && quote.client_note && (
+            <Notice kind="info" title="Comentario del cliente">«{quote.client_note}»</Notice>
+          )}
           {canWrite && (
             <Sheet>
               <SheetHeader title="Estado" />

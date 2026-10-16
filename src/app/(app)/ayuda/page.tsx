@@ -43,7 +43,7 @@ export default async function HelpPage() {
           <ol>
             <li>En <Link href="/ajustes">Ajustes</Link> completa la <strong>puesta en marcha</strong>: datos de la empresa, logotipo, color, servicios y equipo.</li>
             <li>Pega el <Link href="/ajustes/formulario">formulario web</Link> en tu página de contacto.</li>
-            <li>Activa las <Link href="/automatizaciones">automatizaciones</Link> que te interesen.</li>
+            <li>Conecta tu <Link href="/ajustes/correo">correo de envío</Link> (1 minuto con Gmail) para que los avisos y las respuestas a clientes salgan solos. Las <Link href="/automatizaciones">automatizaciones</Link> ya vienen activadas.</li>
             <li>Cada mañana, abre el <Link href="/panel">Panel</Link>: verás lo que requiere atención, las visitas del día y las cifras reales.</li>
           </ol>
 
@@ -65,8 +65,8 @@ export default async function HelpPage() {
           <ol>
             <li>Desde la ficha del contacto, pulsa <strong>Nuevo presupuesto</strong>. Añade conceptos, cantidades, precios y el tipo de IVA de cada línea. Los totales se calculan solos.</li>
             <li>Se guarda como <strong>borrador</strong>. Un administrador o el propietario lo revisa y pulsa <strong>Dar por revisado</strong>. Sin revisión no se puede marcar como enviado.</li>
-            <li>Descarga el <strong>PDF</strong> con tu logotipo y envíalo como prefieras. Después pulsa <strong>Marcar como enviado</strong>: el contacto pasa a «Presupuesto enviado».</li>
-            <li>Cuando el cliente conteste, marca <strong>Aceptado</strong> (el contacto pasa a «Ganado») o <strong>Rechazado</strong>.</li>
+            <li>Pulsa <strong>Enviar por email</strong>: el cliente recibe un enlace para verlo en el móvil, descargar el PDF y <strong>aceptarlo con un clic</strong>. Si prefieres WhatsApp, usa <strong>Crear enlace</strong> y pégalo en el chat.</li>
+            <li>Cuando el cliente acepta desde el enlace, todo pasa solo: el presupuesto queda aceptado, la ficha pasa a «Ganado», se crea la tarea «Planificar la instalación» y te avisamos por email. Si contesta por teléfono, márcalo tú con <strong>Aceptado</strong> o <strong>Rechazado</strong>.</li>
           </ol>
           <p>Para reutilizar un presupuesto parecido, usa <strong>Duplicar como plantilla</strong>. Importante: el sistema hace las cuentas, pero <strong>no decide qué tipo de IVA corresponde</strong> ni valida precios: eso lo determina tu empresa.</p>
 
@@ -74,13 +74,28 @@ export default async function HelpPage() {
           <p>En la ficha de cada contacto puedes programar una <strong>visita técnica</strong> (con fecha, duración y lugar) o una <strong>tarea</strong> (llamar, enviar documentación…). La <Link href="/agenda">Agenda</Link> las ordena: vencidas, hoy, próximos 7 días y más adelante.</p>
 
           <H id="automatizaciones">Automatizaciones</H>
+          <p>Vienen activadas y trabajan solas. Puedes apagar o ajustar cualquiera en <Link href="/automatizaciones">Automatizaciones</Link>.</p>
+          <p><strong>Cuando llega una solicitud</strong></p>
           <ul>
-            <li><strong>Aviso de nueva solicitud:</strong> email inmediato cuando entra una solicitud por la web.</li>
-            <li><strong>Presupuesto sin seguimiento:</strong> pasados X días sin notas ni llamadas, crea una tarea y avisa al responsable.</li>
-            <li><strong>Visita próxima:</strong> recordatorio por email X horas antes.</li>
-            <li><strong>Contacto sin atender:</strong> si sigue en «Nuevo» pasadas X horas, crea una tarea de llamada.</li>
+            <li><strong>Contestar al cliente:</strong> le llega un correo confirmando que habéis recibido su solicitud, con su número.</li>
+            <li><strong>Avisaros:</strong> email inmediato al equipo con los datos del cliente.</li>
+            <li><strong>Repartir por turnos:</strong> se asigna a quien menos contactos abiertos tenga, con «Llamar» como próximo paso.</li>
+            <li><strong>Juntar repetidos:</strong> si el cliente ya estaba en tu lista, se añade a su ficha en vez de duplicarla.</li>
+            <li><strong>Tarea si nadie ha llamado:</strong> pasado el plazo, se crea la tarea de llamada.</li>
           </ul>
-          <p>Ninguna acción se repite para el mismo caso. Todo queda registrado en la propia página, incluidos los emails y su estado. «Aceptado por el proveedor» significa que el servicio de email lo ha admitido; no garantiza que haya llegado al buzón.</p>
+          <p><strong>Mientras se trabaja la venta</strong></p>
+          <ul>
+            <li><strong>Fases solas:</strong> visita programada → «Visita programada»; presupuesto enviado → «Presupuesto enviado»; aceptado → «Ganado»; rechazado → «Perdido».</li>
+            <li><strong>Después de la visita:</strong> al marcarla como hecha, se crea «Preparar presupuesto» para el día siguiente.</li>
+            <li><strong>Presupuestos caducados:</strong> pasada la fecha de validez sin respuesta, se marcan como caducados y se crea una tarea para llamar.</li>
+          </ul>
+          <p><strong>Recordatorios y avisos</strong></p>
+          <ul>
+            <li><strong>Visita:</strong> recordatorio al técnico y al cliente el día antes.</li>
+            <li><strong>Presupuesto sin respuesta:</strong> tarea y aviso al responsable; opcionalmente, un correo amable al cliente con el enlace.</li>
+            <li><strong>Resumen del día:</strong> cada mañana, cada persona recibe sus visitas, tareas y lo pendiente.</li>
+          </ul>
+          <p>Se comprueban solas cada 15 minutos mientras alguien usa la aplicación, y una vez al día aunque nadie entre. Ninguna acción se repite para el mismo caso y todo queda registrado, incluidos los emails y su estado. «Aceptado por el proveedor» significa que tu correo lo ha admitido; no garantiza que haya llegado al buzón.</p>
 
           <H id="formulario">Formulario web</H>
           <p>Tiene protección contra spam (campo oculto, tiempo mínimo y límite de envíos), pide solo los datos imprescindibles e incluye la información de protección de datos con casilla de consentimiento. Revisa ese texto con tu asesoría y enlaza tu política de privacidad desde <Link href="/ajustes/formulario">Ajustes › Formulario web</Link>.</p>
