@@ -12,3 +12,6 @@ test-results/
 .impeccable/review/
 .impeccable/questions/
 .pgdata/
+
+# Datos de prospección (nunca al repositorio)
+prospeccion/datos/
