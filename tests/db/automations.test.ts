@@ -62,7 +62,7 @@ d("automatizaciones", () => {
     expect(out.rows.length).toBeGreaterThan(0);
     for (const row of out.rows) {
       expect(row.status).toBe("no_configurado");
-      expect(row.last_error).toMatch(/EMAIL_PROVIDER/);
+      expect(row.last_error).toMatch(/Correo de envío/);
     }
   });
 

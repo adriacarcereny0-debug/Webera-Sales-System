@@ -28,7 +28,7 @@ Producto de **Webera**, multiempresa: cada instalador trabaja con su logotipo, c
 ### Requiere credenciales para funcionar en producción
 | Función | Qué falta | Comportamiento sin ello |
 |---|---|---|
-| Envío de emails | `EMAIL_PROVIDER` + `EMAIL_FROM` + `RESEND_API_KEY` o datos SMTP | Las tareas automáticas se crean igualmente; los emails quedan como «No enviado: email sin configurar» y se pueden reintentar después. **Nunca se muestran como enviados.** El envío real no se ha podido probar en este entorno por falta de credenciales. |
+| Envío de emails | Cada empresa conecta su correo en **Ajustes › Correo de envío** (Gmail con contraseña de aplicación, SMTP de su hosting o su cuenta de Resend). Opcional: correo general de la plataforma con `EMAIL_PROVIDER` + `EMAIL_FROM` + `RESEND_API_KEY` o datos SMTP | Las tareas automáticas se crean igualmente; los emails quedan como «No enviado: email sin configurar» y se pueden reintentar después. **Nunca se muestran como enviados.** El envío por SMTP con usuario y contraseña está probado de extremo a extremo contra un servidor de correo de pruebas (`e2e/email.spec.ts`, con `E2E_SMTP_SINK`); no se ha probado contra Gmail ni Resend reales. |
 | Recordatorios programados | `CRON_SECRET` y un cron (Vercel Cron o externo) | Solo se ejecutan con el botón «Ejecutar ahora». El aviso de nueva solicitud es inmediato y no depende del cron. |
 | Base de datos | `DATABASE_URL` de un PostgreSQL gestionado | Todo se ha probado con PostgreSQL 16 local con un rol no superusuario, que reproduce un proveedor gestionado. |
 
@@ -106,9 +106,10 @@ Documentadas una a una en [`.env.example`](.env.example).
 | `DATABASE_URL` | Sí | Conexión PostgreSQL. El usuario debe poder `CREATE ROLE` (lo hace la migración). |
 | `APP_DATABASE_URL` | No | Si existe, se usa en lugar de `DATABASE_URL` (útil cuando una integración ya fija `DATABASE_URL` a otra base de datos). |
 | `SESSION_SECRET` | Sí en producción | 32+ caracteres aleatorios. Firma sesiones y tokens antispam. |
+| `EMAIL_ENCRYPTION_KEY` | Recomendada | 32+ caracteres. Cifra (AES-256-GCM) la contraseña o clave del correo que conecta cada empresa. Si falta se deriva de `SESSION_SECRET`. No la cambies una vez en uso: las claves guardadas dejarían de descifrarse y cada empresa tendría que volver a conectar su correo. |
 | `APP_URL` | Sí en producción | URL pública sin barra final. |
 | `CRON_SECRET` | Recomendada | Protege `/api/cron/automations`. |
-| `EMAIL_PROVIDER` | No | `resend` o `smtp`. |
+| `EMAIL_PROVIDER` | No | `resend` o `smtp`. Correo **de la plataforma**: solo se usa para las empresas que no han conectado el suyo. |
 | `EMAIL_FROM` | Con email | Remitente verificado. |
 | `RESEND_API_KEY` | Con Resend | Clave de la API de Resend. |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SECURE` | Con SMTP | Servidor SMTP. |

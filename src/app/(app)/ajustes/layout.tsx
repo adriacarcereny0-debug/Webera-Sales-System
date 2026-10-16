@@ -12,6 +12,7 @@ export default async function SettingsLayout({ children }: { children: React.Rea
     { href: "/ajustes/servicios", label: "Servicios", show: can(r, "settings.manage") },
     { href: "/ajustes/usuarios", label: "Usuarios y permisos", show: true },
     { href: "/ajustes/formulario", label: "Formulario web", show: can(r, "settings.manage") },
+    { href: "/ajustes/correo", label: "Correo de envío", show: can(r, "settings.manage") },
     { href: "/ajustes/plantillas", label: "Plantillas de email", show: can(r, "settings.manage") },
     { href: "/ajustes/campos", label: "Campos personalizados", show: can(r, "settings.manage") },
     { href: "/ajustes/datos", label: "Importar, exportar y demo", show: can(r, "data.export") || can(r, "data.import") },

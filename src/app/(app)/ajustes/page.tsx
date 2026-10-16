@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CircleCheck, Circle } from "lucide-react";
 import { requireSession, tenant } from "@/lib/auth/session";
 import { getCompany } from "@/server/company";
-import { emailConfigStatus } from "@/lib/email/provider";
+import { getCompanyEmailStatus } from "@/lib/email/company-config";
 import { env } from "@/lib/env";
 import { Sheet, SheetHeader } from "@/components/ui/misc";
 import { cn } from "@/lib/cn";
@@ -19,7 +19,7 @@ export default async function SettingsHome() {
     services: (await tx.one<{ n: number }>(`select count(*)::int as n from services where active`))?.n ?? 0,
   }));
   const c = d.company;
-  const email = emailConfigStatus();
+  const email = await getCompanyEmailStatus(s.company.id);
   const steps = [
     { done: !!(c.legal_name && c.tax_id && c.phone && c.email), label: "Datos fiscales y de contacto", hint: "Aparecen en los presupuestos.", href: "/ajustes/empresa" },
     { done: c.has_logo, label: "Logotipo y color de marca", hint: "Se usan en la aplicación, el formulario y el PDF.", href: "/ajustes/empresa" },
@@ -27,7 +27,7 @@ export default async function SettingsHome() {
     { done: d.users > 1, label: "Invitar al equipo", hint: `${d.users} usuario${d.users === 1 ? "" : "s"} activo${d.users === 1 ? "" : "s"}.`, href: "/ajustes/usuarios" },
     { done: !!(c.privacy_url || c.privacy_controller), label: "Texto de privacidad del formulario", hint: "Revisa el responsable y el enlace a tu política.", href: "/ajustes/formulario" },
     { done: d.autos > 0, label: "Activar automatizaciones", hint: `${d.autos} de 4 activas.`, href: "/automatizaciones" },
-    { done: email.configured, label: "Envío de emails (Resend o SMTP)", hint: email.configured ? `Proveedor: ${email.provider}.` : "Lo configura Webera en las variables del servidor.", href: "/automatizaciones" },
+    { done: !!email.own, label: "Conectar tu correo de envío", hint: email.own ? `Los avisos salen desde ${email.own.fromEmail}.` : "Para que los avisos lleguen por email. Con Gmail es 1 minuto.", href: "/ajustes/correo" },
     { done: !!env.cronSecret, label: "Ejecución programada de recordatorios", hint: "CRON_SECRET en el servidor.", href: "/automatizaciones" },
   ];
   const done = steps.filter((x) => x.done).length;

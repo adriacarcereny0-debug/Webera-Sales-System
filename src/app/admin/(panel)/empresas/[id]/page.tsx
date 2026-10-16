@@ -32,13 +32,15 @@ export default async function CompanyAdminPage({ params, searchParams }: { param
       c,
       users: await tx.query<{ id: string; name: string; email: string; role: Role; active: boolean; must_change_password: boolean; last_login_at: string | null }>(
         `select id, name, email, role, active, must_change_password, last_login_at from users where company_id = $1 order by active desc, role, name`, [id]),
-      stats: (await tx.one<{ contacts: number; open: number; quotes: number; accepted: string; tasks: number; outbox_err: number }>(`
+      stats: (await tx.one<{ contacts: number; open: number; quotes: number; accepted: string; tasks: number; outbox_err: number; email_from: string | null; sent_month: number }>(`
         select (select count(*)::int from contacts where company_id = $1) as contacts,
                (select count(*)::int from contacts where company_id = $1 and stage not in ('ganado','perdido')) as open,
                (select count(*)::int from quotes where company_id = $1) as quotes,
                (select coalesce(sum(subtotal_cents),0) from quotes where company_id = $1 and status = 'aceptado') as accepted,
                (select count(*)::int from tasks where company_id = $1 and done_at is null) as tasks,
-               (select count(*)::int from email_outbox where company_id = $1 and status in ('error','no_configurado')) as outbox_err`, [id]))!,
+               (select count(*)::int from email_outbox where company_id = $1 and status in ('error','no_configurado')) as outbox_err,
+               (select from_email from company_email_settings where company_id = $1) as email_from,
+               (select count(*)::int from email_outbox where company_id = $1 and status = 'aceptado' and sent_at >= date_trunc('month', now())) as sent_month`, [id]))!,
       audit: await tx.query<{ action: string; target: string | null; created_at: string; admin: string | null }>(
         `select a.action, a.target, a.created_at, p.name as admin from platform_audit a left join platform_admins p on p.id = a.admin_id where a.company_id = $1 order by a.created_at desc limit 10`, [id]),
     };
@@ -81,6 +83,7 @@ export default async function CompanyAdminPage({ params, searchParams }: { param
               <Definition term="Presupuestos">{stats.quotes}</Definition>
               <Definition term="Aceptado">{formatCents(stats.accepted)}</Definition>
               <Definition term="Tareas pendientes">{stats.tasks}</Definition>
+              <Definition term="Correo de envío">{stats.email_from ? <>{stats.email_from} · {stats.sent_month} este mes</> : <span className="text-warn">Sin conectar</span>}</Definition>
               <Definition term="Emails sin enviar">{stats.outbox_err ? <span className="text-warn">{stats.outbox_err}</span> : 0}</Definition>
             </dl>
           </Sheet>

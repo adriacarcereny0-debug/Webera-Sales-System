@@ -2,6 +2,7 @@ import "server-only";
 import type { Tx } from "../db";
 import { withSystem } from "../db";
 import { sendEmail } from "./provider";
+import { loadCompanyTransport } from "./company-config";
 
 export const MAX_ATTEMPTS = 5;
 /** Espera antes de cada reintento (minutos): 1, 5, 30, 120, 360. */
@@ -30,13 +31,15 @@ export async function processOutbox(opts: { companyId?: string; limit?: number }
   const stats = { accepted: 0, failed: 0, retrying: 0, notConfigured: 0 };
   for (let i = 0; i < limit; i++) {
     const done = await withSystem(async (tx) => {
-      const m = await tx.one<{ id: string; to_email: string; subject: string; body_text: string; attempts: number; company_name: string; reply_to: string | null }>(
-        `select o.id, o.to_email, o.subject, o.body_text, o.attempts, c.name as company_name, c.email as reply_to
+      const m = await tx.one<{ id: string; company_id: string; to_email: string; subject: string; body_text: string; attempts: number; company_name: string; reply_to: string | null }>(
+        `select o.id, o.company_id, o.to_email, o.subject, o.body_text, o.attempts, c.name as company_name, c.email as reply_to
            from email_outbox o join companies c on c.id = o.company_id
           where o.status = 'pendiente' and o.next_attempt_at <= now() and ($1::uuid is null or o.company_id = $1::uuid)
           order by o.next_attempt_at limit 1 for update of o skip locked`, [opts.companyId ?? null]);
       if (!m) return false;
-      const r = await sendEmail({ to: m.to_email, subject: m.subject, text: m.body_text, replyTo: m.reply_to, fromName: m.company_name });
+      // Cada empresa envía con su propio correo; si no lo ha conectado, con el de la plataforma (si existe).
+      const transport = await loadCompanyTransport(tx, m.company_id);
+      const r = await sendEmail({ to: m.to_email, subject: m.subject, text: m.body_text, replyTo: m.reply_to, fromName: m.company_name }, transport);
       const attempts = m.attempts + 1;
       if (r.status === "accepted") {
         await tx.query(`update email_outbox set status='aceptado', provider=$2, provider_message_id=$3, attempts=$4, sent_at=now(), last_error=null where id=$1`, [m.id, r.provider, r.messageId, attempts]);

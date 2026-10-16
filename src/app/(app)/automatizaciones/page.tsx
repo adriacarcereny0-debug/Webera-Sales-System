@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { requireSession, tenant } from "@/lib/auth/session";
 import { can } from "@/lib/permissions";
 import { AUTOMATION_DEFAULTS, AUTOMATION_KEYS, type AutomationConfig, type AutomationKey } from "@/lib/company-defaults";
-import { emailConfigStatus } from "@/lib/email/provider";
+import { getCompanyEmailStatus, EMAIL_PROVIDER_LABELS } from "@/lib/email/company-config";
 import { env } from "@/lib/env";
 import { fmtDateTime } from "@/lib/dates";
 import { PageHeader, Sheet, SheetHeader, Notice, EmptyState } from "@/components/ui/misc";
@@ -32,7 +33,7 @@ export default async function AutomationsPage() {
       `select id, to_email, subject, status, attempts, last_error, created_at, sent_at, next_attempt_at, provider from email_outbox order by created_at desc limit 30`),
   }));
   const byKey = Object.fromEntries(autos.map((a) => [a.key, a]));
-  const email = emailConfigStatus();
+  const email = await getCompanyEmailStatus(s.company.id);
 
   return (
     <>
@@ -42,13 +43,18 @@ export default async function AutomationsPage() {
         actions={canManage ? <RunNowForm /> : undefined}
       />
 
-      {email.configured ? (
-        <Notice kind="ok" className="mb-5" title={`Email activo con ${email.provider === "resend" ? "Resend" : "SMTP"}`}>
-          «Aceptado por el proveedor» significa que el proveedor ha admitido el mensaje para su envío. No confirma que haya llegado al buzón del destinatario.
+      {email.own ? (
+        <Notice kind="ok" className="mb-5" title={`Los avisos salen desde ${email.own.fromEmail}`}>
+          {EMAIL_PROVIDER_LABELS[email.own.provider]} · {email.sentThisMonth} enviados este mes. «Aceptado» significa que tu proveedor de correo ha admitido el mensaje; no confirma que haya llegado al buzón.
+        </Notice>
+      ) : email.platformConfigured ? (
+        <Notice kind="ok" className="mb-5" title="Los avisos salen desde el correo general de Webera">
+          Puedes enviarlos desde tu propio correo en <Link className="underline" href="/ajustes/correo">Ajustes › Correo de envío</Link>.
         </Notice>
       ) : (
-        <Notice kind="warn" className="mb-5" title="El envío de emails no está configurado">
-          {email.problem} Las tareas automáticas sí se crean, pero los avisos por email quedan registrados como «No enviado». Consulta el README para configurar Resend o SMTP.
+        <Notice kind="warn" className="mb-5" title="Los avisos todavía no llegan por email">
+          Las tareas automáticas sí se crean, pero los correos quedan como «No enviado».{" "}
+          {canManage ? <>Conecta tu correo en <Link className="underline" href="/ajustes/correo">Ajustes › Correo de envío</Link> (1 minuto con Gmail).</> : "Pide a un administrador que conecte el correo de la empresa."}
         </Notice>
       )}
       {!env.cronSecret && (

@@ -7,6 +7,12 @@ export type SendResult =
   | { status: "failed"; provider: string; error: string; retryable: boolean }
   | { status: "not_configured"; provider: "none"; error: string };
 
+/** Cómo se envía un email: el correo propio de la empresa o, si no tiene, el de la plataforma. */
+export type EmailTransport =
+  | { kind: "resend"; provider: "resend"; apiKey: string; from: string }
+  | { kind: "smtp"; provider: "gmail" | "smtp"; host: string; port: number; secure: boolean; user: string; pass: string; from: string };
+
+/** Correo de la plataforma (variables del servidor). Solo se usa si la empresa no ha conectado el suyo. */
 export function emailConfigStatus(): { configured: boolean; provider: string; problem?: string } {
   const p = env.email.provider;
   if (p === "none") return { configured: false, provider: "none", problem: "No hay proveedor de email configurado (EMAIL_PROVIDER)." };
@@ -16,20 +22,38 @@ export function emailConfigStatus(): { configured: boolean; provider: string; pr
   return { configured: true, provider: p };
 }
 
+export function platformTransport(): EmailTransport | null {
+  if (!emailConfigStatus().configured) return null;
+  const from = env.email.from!;
+  if (env.email.provider === "resend") return { kind: "resend", provider: "resend", apiKey: env.email.resendApiKey!, from };
+  const smtp = env.email.smtp;
+  return { kind: "smtp", provider: "smtp", host: smtp.host!, port: smtp.port, secure: smtp.secure, user: smtp.user!, pass: smtp.pass!, from };
+}
+
+/** Solo la dirección, sin nombre: «Nombre <a@b.c>» → «a@b.c». */
+function bareAddress(from: string): string {
+  return from.replace(/^.*<|>$/g, "").trim();
+}
+
 /**
  * Envía un email de texto. "accepted" significa que el proveedor lo ha aceptado
  * para su envío; NO garantiza la entrega en el buzón del destinatario.
+ * Sin transporte explícito usa el correo de la plataforma.
  */
-export async function sendEmail(msg: { to: string; subject: string; text: string; replyTo?: string | null; fromName?: string }): Promise<SendResult> {
-  const cfg = emailConfigStatus();
-  if (!cfg.configured) return { status: "not_configured", provider: "none", error: cfg.problem! };
-  const from = msg.fromName ? `${msg.fromName.replace(/["<>]/g, "")} <${env.email.from!.replace(/^.*<|>$/g, "")}>` : env.email.from!;
+export async function sendEmail(
+  msg: { to: string; subject: string; text: string; replyTo?: string | null; fromName?: string },
+  transport?: EmailTransport | null,
+): Promise<SendResult> {
+  const t = transport ?? platformTransport();
+  if (!t) return { status: "not_configured", provider: "none", error: "Sin correo de envío: conecta el de la empresa en Ajustes › Correo de envío." };
+  const address = bareAddress(t.from);
+  const from = msg.fromName ? `${msg.fromName.replace(/["<>]/g, "")} <${address}>` : t.from;
 
-  if (env.email.provider === "resend") {
+  if (t.kind === "resend") {
     try {
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
-        headers: { Authorization: `Bearer ${env.email.resendApiKey}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${t.apiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({ from, to: [msg.to], subject: msg.subject, text: msg.text, reply_to: msg.replyTo || undefined }),
         signal: AbortSignal.timeout(15_000),
       });
@@ -42,17 +66,17 @@ export async function sendEmail(msg: { to: string; subject: string; text: string
   }
 
   try {
-    const transport = nodemailer.createTransport({
-      host: env.email.smtp.host, port: env.email.smtp.port, secure: env.email.smtp.secure,
-      auth: { user: env.email.smtp.user, pass: env.email.smtp.pass }, connectionTimeout: 15_000, greetingTimeout: 10_000,
+    const transportSmtp = nodemailer.createTransport({
+      host: t.host, port: t.port, secure: t.secure,
+      auth: { user: t.user, pass: t.pass }, connectionTimeout: 15_000, greetingTimeout: 10_000, socketTimeout: 20_000,
     });
-    const info = await transport.sendMail({ from, to: msg.to, subject: msg.subject, text: msg.text, replyTo: msg.replyTo || undefined });
-    if (info.accepted?.length) return { status: "accepted", provider: "smtp", messageId: info.messageId ?? null };
-    return { status: "failed", provider: "smtp", error: `Rechazado por el servidor: ${String(info.rejected?.join(", "))}`.slice(0, 500), retryable: false };
+    const info = await transportSmtp.sendMail({ from, to: msg.to, subject: msg.subject, text: msg.text, replyTo: msg.replyTo || undefined });
+    if (info.accepted?.length) return { status: "accepted", provider: t.provider, messageId: info.messageId ?? null };
+    return { status: "failed", provider: t.provider, error: `Rechazado por el servidor: ${String(info.rejected?.join(", "))}`.slice(0, 500), retryable: false };
   } catch (e) {
     const err = e as { message?: string; responseCode?: number };
     // SMTP: 4xx = error temporal (reintentar), 5xx = rechazo permanente; sin código = fallo de red.
     const code = err.responseCode;
-    return { status: "failed", provider: "smtp", error: (err.message ?? String(e)).slice(0, 500), retryable: !code || (code >= 400 && code < 500) };
+    return { status: "failed", provider: t.provider, error: (err.message ?? String(e)).slice(0, 500), retryable: !code || (code >= 400 && code < 500) };
   }
 }
