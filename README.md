@@ -104,6 +104,7 @@ Documentadas una a una en [`.env.example`](.env.example).
 | Variable | Obligatoria | Uso |
 |---|---|---|
 | `DATABASE_URL` | Sí | Conexión PostgreSQL. El usuario debe poder `CREATE ROLE` (lo hace la migración). |
+| `APP_DATABASE_URL` | No | Si existe, se usa en lugar de `DATABASE_URL` (útil cuando una integración ya fija `DATABASE_URL` a otra base de datos). |
 | `SESSION_SECRET` | Sí en producción | 32+ caracteres aleatorios. Firma sesiones y tokens antispam. |
 | `APP_URL` | Sí en producción | URL pública sin barra final. |
 | `CRON_SECRET` | Recomendada | Protege `/api/cron/automations`. |

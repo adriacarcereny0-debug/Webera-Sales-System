@@ -2,7 +2,7 @@ import "server-only";
 
 /** Comprueba la configuración mínima del servidor y devuelve un mensaje claro si falta algo. */
 export function configProblem(): string | null {
-  if (!process.env.DATABASE_URL?.trim()) return "El servidor todavía no está conectado a la base de datos (falta DATABASE_URL).";
+  if (!process.env.APP_DATABASE_URL?.trim() && !process.env.DATABASE_URL?.trim()) return "El servidor todavía no está conectado a la base de datos (falta DATABASE_URL).";
   if (process.env.NODE_ENV === "production" && (process.env.SESSION_SECRET?.trim().length ?? 0) < 32) {
     return "Falta configurar la clave de sesiones del servidor (SESSION_SECRET).";
   }

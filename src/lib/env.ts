@@ -10,9 +10,14 @@ function optional(name: string): string | undefined {
   return v && v.trim() !== "" ? v.trim() : undefined;
 }
 
+/** APP_DATABASE_URL tiene prioridad: permite elegir la base de datos cuando la plataforma ya fija DATABASE_URL. */
+function databaseUrl(): string | undefined {
+  return optional("APP_DATABASE_URL") ?? optional("DATABASE_URL");
+}
+
 export const env = {
   get databaseUrl(): string {
-    const v = optional("DATABASE_URL");
+    const v = databaseUrl();
     if (!v) throw new Error("Falta DATABASE_URL. Consulta el README (Variables de entorno).");
     return v;
   },
@@ -55,7 +60,7 @@ export const env = {
   get dbSsl(): boolean {
     const v = optional("DATABASE_SSL");
     if (v) return v === "true" || v === "require";
-    const url = optional("DATABASE_URL") ?? "";
+    const url = databaseUrl() ?? "";
     return /sslmode=require/.test(url);
   },
 };
