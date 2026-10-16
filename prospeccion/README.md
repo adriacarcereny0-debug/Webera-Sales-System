@@ -19,3 +19,9 @@
    - Envía poco a poco (20–30 al día) desde un buzón de tu dominio, no todos de golpe: así no acabas en spam.
 
 La carpeta `datos/` está en `.gitignore`: los datos de contacto nunca se suben al repositorio.
+
+## Envío programado (pendiente de acceso a Gmail)
+- Datos de origen: dataset de Apify `pv1mnQimZJwUHtCUP` (600 fichas). Si `datos/` se pierde, se recupera con `get-dataset-items` y se regenera igual:
+  `node generar-emails.mjs datos/apify.json --nombre "Adria" --telefono "623 41 27 96"`
+- Firma: Adria · 623 41 27 96.
+- Plan: 200 borradores en Gmail y envío el lunes 19/10/2026 a las 17:00 (Madrid) = 15:00 UTC.
