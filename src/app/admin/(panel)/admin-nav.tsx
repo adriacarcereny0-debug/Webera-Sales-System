@@ -9,7 +9,7 @@ const ITEMS = [
   { href: "/admin/empresas", label: "Empresas" },
   { href: "/admin/usuarios", label: "Usuarios y contraseñas" },
   { href: "/admin/correo", label: "Correo" },
-  { href: "/admin/equipo", label: "Equipo Webera" },
+  { href: "/admin/equipo", label: "Equipo Webora Studio" },
   { href: "/admin/actividad", label: "Registro" },
 ];
 

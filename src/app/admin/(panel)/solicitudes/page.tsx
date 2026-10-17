@@ -52,7 +52,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
 
       {!mail.own && !mail.envConfigured && (
         <Notice kind="warn" className="mb-5" title="Las solicitudes no te llegan por email">
-          Se guardan aquí, pero para recibir un aviso en tu correo (y que el interesado reciba una respuesta automática) <Link href="/admin/correo" className="font-medium underline underline-offset-2">conecta el correo de Webera</Link>.
+          Se guardan aquí, pero para recibir un aviso en tu correo (y que el interesado reciba una respuesta automática) <Link href="/admin/correo" className="font-medium underline underline-offset-2">conecta el correo de Webora Studio</Link>.
         </Notice>
       )}
 
@@ -69,7 +69,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
       {leads.length === 0 ? (
         <Sheet>
           <EmptyState title={filter === "abiertas" ? "No hay solicitudes por atender" : "No hay solicitudes aquí"}>
-            Comparte la página pública de Webera para que los instaladores pidan su demostración. Añade <span className="font-mono">?utm_source=…</span> al enlace para saber de dónde viene cada uno.
+            Comparte la página pública de Webora Studio para que los instaladores pidan su demostración. Añade <span className="font-mono">?utm_source=…</span> al enlace para saber de dónde viene cada uno.
           </EmptyState>
         </Sheet>
       ) : (

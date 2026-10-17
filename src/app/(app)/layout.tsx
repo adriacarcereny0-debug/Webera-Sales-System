@@ -59,7 +59,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <NavLinks badges={badges} />
         </nav>
         <div className="border-t border-white/10 p-3">{userBlock}</div>
-        <p className="flex items-center gap-2 px-5 pb-4 text-[0.7rem] text-white/35"><WeberaMark size={14} tone="light" />Webera Sales System</p>
+        <p className="flex items-center gap-2 px-5 pb-4 text-[0.7rem] text-white/35"><WeberaMark size={14} tone="light" />Webora Studio</p>
       </aside>
 
       {/* Barra superior (móvil) */}

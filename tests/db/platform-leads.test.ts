@@ -1,5 +1,5 @@
 /**
- * Solicitudes de demostración (página pública de Webera) contra PostgreSQL real.
+ * Solicitudes de demostración (página pública de Webora Studio) contra PostgreSQL real.
  */
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { Pool } from "pg";
@@ -29,7 +29,7 @@ d("solicitudes de demostración", () => {
     await pool().end();
   });
 
-  it("guarda la solicitud aunque no haya correo de Webera", async () => {
+  it("guarda la solicitud aunque no haya correo de Webora Studio", async () => {
     const r = await L.createPlatformLead(lead);
     expect(r.emailed).toBe(false);
     const row = (await db.query(`select * from platform_leads where id = $1`, [r.id])).rows[0];

@@ -50,7 +50,7 @@ async function doLogin(_: ActionState, fd: FormData): Promise<ActionState> {
     return { error: "El email o la contraseña no son correctos.", values: { email } };
   }
   if (!user.company_active) {
-    return { error: "La cuenta de tu empresa está suspendida. Contacta con Webera.", values: { email } };
+    return { error: "La cuenta de tu empresa está suspendida. Contacta con Webora Studio.", values: { email } };
   }
   await createSession(user.id, ip, await userAgent());
   redirect("/panel");

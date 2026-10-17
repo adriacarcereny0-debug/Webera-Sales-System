@@ -5,7 +5,7 @@ import { WeberaWordmark } from "@/components/brand/webera-mark";
 import { adminLogout } from "../actions";
 import { AdminNav } from "./admin-nav";
 
-export const metadata = { title: { default: "Consola", template: "%s · Consola Webera" } };
+export const metadata = { title: { default: "Consola", template: "%s · Consola Webora Studio" } };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const s = await requireAdmin();

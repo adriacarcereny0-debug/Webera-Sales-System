@@ -20,7 +20,7 @@ async function runTest(companyId: string, companyName: string, to: string): Prom
     if (!row) return { ok: false, error: "No hay ningún correo conectado." };
     const r = await sendEmail({
       to, fromName: companyName,
-      subject: "Prueba de correo · Webera Sales System",
+      subject: "Prueba de correo · Webora Studio",
       text: `Si estás leyendo esto, el correo de envío de ${companyName} funciona.\n\nA partir de ahora los avisos de nuevas solicitudes, recordatorios de visitas y seguimientos de presupuestos saldrán desde ${row.from_email}.`,
     }, rowToTransport(row));
     const ok = r.status === "accepted";

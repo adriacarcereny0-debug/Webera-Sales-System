@@ -18,7 +18,7 @@ if (!input) { console.error("Uso: node generar-emails.mjs <exportación de Apify
 const NOMBRE = opt("nombre", "[tu nombre]");
 const TELEFONO = opt("telefono", "[tu teléfono]");
 const MAX = Number(opt("max", "200"));
-const WEB = opt("web", "https://webera-sales-system.vercel.app").replace(/\/$/, "");
+const WEB = opt("web", "https://weborastudio.es").replace(/\/$/, "");
 const PREFIJO = args.includes("--sin-publicidad") ? "" : "Publicidad: ";
 const outDir = join(dirname(input), ".");
 
@@ -113,7 +113,7 @@ function compose(l) {
     "",
     PAIN[l.service.key],
     "",
-    "Hemos hecho Webera Sales System justo para eso, pensado para instaladores:",
+    "Hemos hecho Webora Studio justo para eso, pensado para instaladores:",
     "- Las solicitudes de vuestra web entran solas, se le contesta al cliente al momento y se reparten en el equipo.",
     "- Los presupuestos salen en PDF con vuestro logo y el cliente los acepta desde el móvil con un clic.",
     "- Si un presupuesto no tiene respuesta o una visita está cerca, el sistema os lo recuerda.",
@@ -123,10 +123,10 @@ function compose(l) {
     "",
     "Un saludo,",
     NOMBRE,
-    "Webera",
+    "Webora Studio",
     "",
     "—",
-    `Os escribo a ${l.email} porque es el email de contacto publicado de ${l.name}. Si no queréis recibir más correos de Webera, contestad «baja» y no volveremos a escribiros.`,
+    `Os escribo a ${l.email} porque es el email de contacto publicado de ${l.name}. Si no queréis recibir más correos de Webora Studio, contestad «baja» y no volveremos a escribiros.`,
   ].join("\n");
   return { ...l, subject, body, link };
 }

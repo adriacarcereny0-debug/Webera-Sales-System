@@ -18,7 +18,7 @@ export type LeadStatus = keyof typeof LEAD_STATUS;
 export interface NewLead { name: string; company: string; email: string; phone: string | null; city: string | null; teamSize: TeamSize | null; message: string | null; source: string | null }
 
 /**
- * Guarda la solicitud de un instalador interesado y, si hay correo de Webera, avisa al equipo
+ * Guarda la solicitud de un instalador interesado y, si hay correo de Webora Studio, avisa al equipo
  * y le contesta al interesado. Si el correo falla, la solicitud queda guardada igualmente en /admin.
  */
 export async function createPlatformLead(l: NewLead) {
@@ -33,19 +33,19 @@ export async function createPlatformLead(l: NewLead) {
   if (!transport) return { id, emailed: false };
 
   const lines = [
-    `${l.name} (${l.company}) ha pedido una demostración de Webera Sales System.`,
+    `${l.name} (${l.company}) ha pedido una demostración de Webora Studio.`,
     `Email: ${l.email}`, l.phone ? `Teléfono: ${l.phone}` : null, l.city ? `Localidad: ${l.city}` : null,
     l.teamSize ? `Equipo: ${TEAM_SIZES[l.teamSize]}` : null, l.message ? `\nMensaje:\n${l.message}` : null,
     `\nVer y dar de alta: ${env.appUrl}/admin/solicitudes`,
   ].filter(Boolean).join("\n");
   const results = await Promise.allSettled([
-    ...notify.map((to) => sendEmail({ to, subject: `Nueva solicitud de demo: ${l.company}${l.city ? ` (${l.city})` : ""}`, text: lines, replyTo: l.email, fromName: "Webera" }, transport)),
+    ...notify.map((to) => sendEmail({ to, subject: `Nueva solicitud de demo: ${l.company}${l.city ? ` (${l.city})` : ""}`, text: lines, replyTo: l.email, fromName: "Webora Studio" }, transport)),
     ...(autoReply ? [sendEmail({
-      to: l.email, fromName: "Webera",
-      subject: "Hemos recibido tu solicitud · Webera Sales System",
-      text: `Hola, ${l.name.split(" ")[0]}:\n\nGracias por tu interés en Webera Sales System. Hemos recibido tu solicitud para ${l.company}.\n\n` +
+      to: l.email, fromName: "Webora Studio",
+      subject: "Hemos recibido tu solicitud · Webora Studio",
+      text: `Hola, ${l.name.split(" ")[0]}:\n\nGracias por tu interés en Webora Studio. Hemos recibido tu solicitud para ${l.company}.\n\n` +
         `Te escribiremos o te llamaremos muy pronto para enseñarte cómo funciona con ejemplos de tu día a día y resolver tus dudas.\n\n` +
-        `Si quieres adelantarnos algo, responde a este correo.\n\nUn saludo,\nWebera`,
+        `Si quieres adelantarnos algo, responde a este correo.\n\nUn saludo,\nWebora Studio`,
     }, transport)] : []),
   ]);
   for (const r of results) if (r.status === "rejected" || (r.status === "fulfilled" && r.value.status !== "accepted")) console.error("[solicitudes] correo", r.status === "fulfilled" ? r.value : r.reason);

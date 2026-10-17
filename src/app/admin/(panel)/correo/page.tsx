@@ -10,7 +10,7 @@ import { EmailConnectForm, TestEmailButton } from "@/components/email/connect-fo
 import { disconnectPlatformEmail, savePlatformEmail, sendPlatformTestEmail } from "../../platform-actions";
 import { NotifyForm } from "./notify-form";
 
-export const metadata: Metadata = { title: "Correo de Webera" };
+export const metadata: Metadata = { title: "Correo de Webora Studio" };
 
 export default async function PlatformEmailPage() {
   await requireAdmin();
@@ -18,7 +18,7 @@ export default async function PlatformEmailPage() {
   const own = st.own;
   return (
     <>
-      <PageHeader title="Correo de Webera"
+      <PageHeader title="Correo de Webora Studio"
         description="Desde este correo te llegan las solicitudes de demostración, se contesta automáticamente a cada interesado y salen los avisos de las empresas que aún no han conectado el suyo." />
       <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="space-y-5">
@@ -50,7 +50,7 @@ export default async function PlatformEmailPage() {
               {own && (
                 <div className="flex flex-wrap items-center gap-2 border-t border-rule pt-4">
                   <TestEmailButton test={sendPlatformTestEmail} />
-                  <ConfirmAction label="Desconectar" title="¿Desconectar el correo de Webera?" confirmLabel="Desconectar" action={disconnectPlatformEmail}>
+                  <ConfirmAction label="Desconectar" title="¿Desconectar el correo de Webora Studio?" confirmLabel="Desconectar" action={disconnectPlatformEmail}>
                     Se borrará la contraseña guardada. Dejarán de llegarte avisos de solicitudes por email.
                   </ConfirmAction>
                 </div>
@@ -58,7 +58,7 @@ export default async function PlatformEmailPage() {
             </div>
           </Sheet>
           <Sheet>
-            <SheetHeader title={own ? "Cambiar el correo conectado" : "Conectar el correo de Webera"}
+            <SheetHeader title={own ? "Cambiar el correo conectado" : "Conectar el correo de Webora Studio"}
               description="Lo más rápido: una cuenta de Gmail con una contraseña de aplicación. Con tu dominio quedará más profesional." />
             <EmailConnectForm own={own} save={savePlatformEmail} />
           </Sheet>

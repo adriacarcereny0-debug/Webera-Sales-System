@@ -14,7 +14,7 @@ export function DemoForm({ token, source }: { token: string; source?: string }) 
       <div role="status" className="flex flex-col items-start gap-3 py-6">
         <CircleCheck className="size-9 text-ok" strokeWidth={1.6} aria-hidden />
         <p className="text-[1.25rem] font-semibold text-ink">¡Recibido!</p>
-        <p className="max-w-md text-[0.98rem] text-ink-2">Te escribiremos muy pronto para enseñarte Webera con ejemplos de tu día a día. Si nos has dejado tu email, revisa también la carpeta de spam.</p>
+        <p className="max-w-md text-[0.98rem] text-ink-2">Te escribiremos muy pronto para enseñarte Webora Studio con ejemplos de tu día a día. Si nos has dejado tu email, revisa también la carpeta de spam.</p>
       </div>
     );
   }
@@ -47,7 +47,7 @@ export function DemoForm({ token, source }: { token: string; source?: string }) 
       </Field>
       <label className="flex cursor-pointer items-start gap-3 text-[0.85rem] text-ink-2">
         <input type="checkbox" name="consent" className="mt-0.5 size-[18px] shrink-0 cursor-pointer rounded accent-[var(--brand)]" />
-        <span>Acepto que Webera use estos datos solo para contactarme sobre esta solicitud. No se ceden a terceros y puedo pedir que se borren respondiendo a cualquiera de sus correos.</span>
+        <span>Acepto que Webora Studio use estos datos solo para contactarme sobre esta solicitud. No se ceden a terceros y puedo pedir que se borren respondiendo a cualquiera de sus correos.</span>
       </label>
       {e.consent && <p className="text-[0.8rem] text-danger">{e.consent}</p>}
       <SubmitButton className="h-12 w-full text-[1rem] sm:w-auto sm:px-6" pendingLabel="Enviando…">Pedir una demostración</SubmitButton>

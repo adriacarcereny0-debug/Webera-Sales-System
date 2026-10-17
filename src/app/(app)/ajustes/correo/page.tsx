@@ -48,7 +48,7 @@ export default async function EmailSettingsPage() {
                 <p className="font-medium text-ink">Todavía no has conectado ningún correo</p>
                 <p className="text-[0.82rem] text-muted">
                   {st.platformConfigured
-                    ? "Mientras tanto, los avisos salen desde el correo general de Webera."
+                    ? "Mientras tanto, los avisos salen desde el correo general de Webora Studio."
                     : "Mientras tanto, los avisos se quedan dentro de la aplicación (en Automatizaciones) y no llegan por email."}
                 </p>
               </div>
@@ -72,7 +72,7 @@ export default async function EmailSettingsPage() {
       </Sheet>
 
       <Notice kind="info" title="Tu contraseña está protegida">
-        Se guarda cifrada y nunca se vuelve a mostrar, ni a ti ni al equipo de Webera. Solo se usa para enviar los avisos de tu empresa.
+        Se guarda cifrada y nunca se vuelve a mostrar, ni a ti ni al equipo de Webora Studio. Solo se usa para enviar los avisos de tu empresa.
       </Notice>
     </div>
   );

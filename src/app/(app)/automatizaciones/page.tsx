@@ -48,7 +48,7 @@ export default async function AutomationsPage() {
           {EMAIL_PROVIDER_LABELS[email.own.provider]} · {email.sentThisMonth} enviados este mes. «Aceptado» significa que tu proveedor de correo ha admitido el mensaje; no confirma que haya llegado al buzón.
         </Notice>
       ) : email.platformConfigured ? (
-        <Notice kind="ok" className="mb-5" title="Los avisos salen desde el correo general de Webera">
+        <Notice kind="ok" className="mb-5" title="Los avisos salen desde el correo general de Webora Studio">
           Puedes enviarlos desde tu propio correo en <Link className="underline" href="/ajustes/correo">Ajustes › Correo de envío</Link>.
         </Notice>
       ) : (

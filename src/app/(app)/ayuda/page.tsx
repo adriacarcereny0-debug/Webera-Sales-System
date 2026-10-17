@@ -101,7 +101,7 @@ export default async function HelpPage() {
           <p>Tiene protección contra spam (campo oculto, tiempo mínimo y límite de envíos), pide solo los datos imprescindibles e incluye la información de protección de datos con casilla de consentimiento. Revisa ese texto con tu asesoría y enlaza tu política de privacidad desde <Link href="/ajustes/formulario">Ajustes › Formulario web</Link>.</p>
 
           <H id="datos">Importar, exportar y copias</H>
-          <p>Desde <Link href="/ajustes/datos">Ajustes › Importar, exportar y demo</Link> puedes descargar contactos y presupuestos en CSV (se abre en Excel) y, si eres propietario, una copia completa en JSON. Las copias de seguridad automáticas de la base de datos dependen del proveedor contratado; Webera te indicará cuál está activa.</p>
+          <p>Desde <Link href="/ajustes/datos">Ajustes › Importar, exportar y demo</Link> puedes descargar contactos y presupuestos en CSV (se abre en Excel) y, si eres propietario, una copia completa en JSON. Las copias de seguridad automáticas de la base de datos dependen del proveedor contratado; Webora Studio te indicará cuál está activa.</p>
 
           <H id="equipo">Usuarios y permisos</H>
           <p>Cada persona entra con su email. Hay cuatro roles: <strong>Propietario</strong> (todo), <strong>Administrador</strong> (todo salvo usuarios), <strong>Comercial</strong> (contactos, tareas y presupuestos, sin revisar ni configurar) y <strong>Solo lectura</strong>. Los datos de tu empresa son inaccesibles para cualquier otra empresa que use el sistema.</p>

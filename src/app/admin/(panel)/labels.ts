@@ -10,7 +10,7 @@ export const ACTION_LABELS: Record<string, string> = {
   "admin.estado": "activó o desactivó un administrador",
   "admin.contrasena": "cambió su contraseña",
   "solicitud.actualizar": "actualizó una solicitud de demo",
-  "correo.conectar": "conectó el correo de Webera",
-  "correo.desconectar": "desconectó el correo de Webera",
+  "correo.conectar": "conectó el correo de Webora Studio",
+  "correo.desconectar": "desconectó el correo de Webora Studio",
   "correo.avisos": "cambió los avisos de solicitudes",
 };

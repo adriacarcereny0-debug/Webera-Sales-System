@@ -59,7 +59,7 @@ export default async function PublicFormPage({ params, searchParams }: { params:
               privacy={{ controller: c.privacy_controller || c.legal_name || c.name, email: c.email, url: c.privacy_url }} />
           </div>
         )}
-        {!embed && <p className="mt-6 text-center text-[0.75rem] text-faint">Gestionado con Webera Sales System</p>}
+        {!embed && <p className="mt-6 text-center text-[0.75rem] text-faint">Gestionado con Webora Studio</p>}
       </div>
     </main>
   );

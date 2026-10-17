@@ -58,7 +58,7 @@ export function NewCompanyForm({ appUrl, prefill }: { appUrl: string; prefill?: 
             <Input id="slug" name="slug" value={slug} onChange={(ev) => { setSlugTouched(true); setSlug(ev.target.value); }} className="font-mono" />
           </Field>
           <ColorInput name="brand_color" defaultValue="#23408e" error={e.brand_color} />
-          <Field label="Nota interna" htmlFor="plan_note" optional hint="Plan contratado, fecha de renovación… Solo la ve Webera.">
+          <Field label="Nota interna" htmlFor="plan_note" optional hint="Plan contratado, fecha de renovación… Solo la ve Webora Studio.">
             <Textarea id="plan_note" name="plan_note" rows={2} defaultValue={prefill?.note} />
           </Field>
         </div>

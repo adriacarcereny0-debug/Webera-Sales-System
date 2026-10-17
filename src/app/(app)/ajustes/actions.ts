@@ -151,7 +151,7 @@ export async function createUser(_: ActionState, fd: FormData): Promise<ActionSt
   const d = parsed.data;
   if (d.role === "propietario" && s.user.role !== "propietario") return { error: "Solo el propietario puede crear otro propietario." };
   const exists = await withSystem((tx) => tx.one(`select 1 from users where email = $1`, [d.email]));
-  if (exists) return { error: "Ese email ya tiene una cuenta en Webera Sales System.", fieldErrors: { email: "Ya registrado." } };
+  if (exists) return { error: "Ese email ya tiene una cuenta en Webora Studio.", fieldErrors: { email: "Ya registrado." } };
   const pw = temporaryPassword();
   const hash = await hashPassword(pw);
   await tenant(s, async (tx) => {

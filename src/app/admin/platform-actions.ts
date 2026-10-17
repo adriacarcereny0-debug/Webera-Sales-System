@@ -31,7 +31,7 @@ export async function updatePlatformLead(fd: FormData) {
 }
 
 // ---------------------------------------------------------------------------
-// Correo de Webera
+// Correo de Webora Studio
 // ---------------------------------------------------------------------------
 async function runPlatformTest(to: string): Promise<{ ok: boolean; error?: string }> {
   return withSystem(async (tx) => {
@@ -40,9 +40,9 @@ async function runPlatformTest(to: string): Promise<{ ok: boolean; error?: strin
     const transport = await loadPlatformTransport(tx);
     if (!transport) return { ok: false, error: "No se ha podido leer la configuración guardada. Vuelve a escribir la contraseña." };
     const r = await sendEmail({
-      to, fromName: "Webera",
-      subject: "Prueba de correo · Consola Webera",
-      text: `Si estás leyendo esto, el correo de Webera funciona.\n\nDesde ${row.from_email} saldrán los avisos de nuevas solicitudes de demostración, la respuesta automática a los interesados y los avisos de las empresas que aún no han conectado su propio correo.`,
+      to, fromName: "Webora Studio",
+      subject: "Prueba de correo · Consola Webora Studio",
+      text: `Si estás leyendo esto, el correo de Webora Studio funciona.\n\nDesde ${row.from_email} saldrán los avisos de nuevas solicitudes de demostración, la respuesta automática a los interesados y los avisos de las empresas que aún no han conectado su propio correo.`,
     }, transport);
     const ok = r.status === "accepted";
     const error = ok ? null : friendlyEmailError(r.error, row.provider);

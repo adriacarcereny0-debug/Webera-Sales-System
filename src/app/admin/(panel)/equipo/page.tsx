@@ -8,7 +8,7 @@ import { Chip } from "@/components/ui/chip";
 import { toggleAdmin } from "../../actions";
 import { NewAdminForm, OwnPasswordForm } from "./forms";
 
-export const metadata: Metadata = { title: "Equipo Webera" };
+export const metadata: Metadata = { title: "Equipo Webora Studio" };
 
 export default async function TeamPage() {
   const s = await requireAdmin();
@@ -16,7 +16,7 @@ export default async function TeamPage() {
     `select id, name, email, active, last_login_at from platform_admins order by active desc, name`));
   return (
     <>
-      <PageHeader title="Equipo Webera" description="Personas con acceso a esta consola. Tienen control total sobre todas las empresas: dalo solo a quien lo necesite." />
+      <PageHeader title="Equipo Webora Studio" description="Personas con acceso a esta consola. Tienen control total sobre todas las empresas: dalo solo a quien lo necesite." />
       <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <div className="space-y-5">
           <Sheet>

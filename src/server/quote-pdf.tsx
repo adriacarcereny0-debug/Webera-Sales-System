@@ -42,7 +42,7 @@ export async function renderQuotePdf(opts: { quote: QuoteRow; items: QuoteItemRo
   const date = (d: string) => fmtDateLong(d + "T12:00:00Z");
 
   const doc = (
-    <Document title={`Presupuesto ${quote.code}`} author={company.name} creator="Webera Sales System" language="es">
+    <Document title={`Presupuesto ${quote.code}`} author={company.name} creator="Webora Studio" language="es">
       <Page size="A4" style={st.page}>
         <View style={[st.bar, { backgroundColor: company.brand_color }]} fixed />
         {quote.status === "borrador" && <Text style={st.watermark} fixed>BORRADOR</Text>}

@@ -4,7 +4,7 @@ import { env } from "@/lib/env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.appUrl),
-  title: { default: "Webera Sales System", template: "%s · Webera Sales System" },
+  title: { default: "Webora Studio", template: "%s · Webora Studio" },
   description: "Contactos, presupuestos, visitas y seguimiento comercial para empresas instaladoras.",
   robots: { index: false, follow: false },
 };

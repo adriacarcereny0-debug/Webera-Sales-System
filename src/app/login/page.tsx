@@ -15,7 +15,7 @@ export default async function LoginPage() {
         <WeberaWordmark sub="Sales System" />
         <div className="mx-auto w-full max-w-sm py-14">
           <h1 className="text-[2rem] leading-[1.1] font-semibold tracking-[-0.025em] text-balance">Accede a tu cuenta</h1>
-          <p className="mt-2.5 text-[0.98rem] text-muted">Usa el email y la contraseña que te facilitó tu empresa o Webera.</p>
+          <p className="mt-2.5 text-[0.98rem] text-muted">Usa el email y la contraseña que te facilitó tu empresa o Webora Studio.</p>
           <div className="mt-9"><LoginForm /></div>
         </div>
         <p className="max-w-sm text-[0.8rem] leading-relaxed text-muted">¿Has olvidado la contraseña? Pide a la persona responsable de tu empresa que la restablezca, o escríbenos.</p>

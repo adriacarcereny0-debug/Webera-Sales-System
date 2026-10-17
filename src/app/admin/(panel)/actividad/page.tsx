@@ -21,7 +21,7 @@ export default async function AdminAuditPage({ searchParams }: { searchParams: P
   }));
   return (
     <>
-      <PageHeader title="Registro de la consola" description="Todo lo que hace el equipo de Webera desde aquí: altas, contraseñas, suspensiones y eliminaciones." />
+      <PageHeader title="Registro de la consola" description="Todo lo que hace el equipo de Webora Studio desde aquí: altas, contraseñas, suspensiones y eliminaciones." />
       <Sheet>
         {rows.length === 0 ? <EmptyState title="Sin movimientos" /> : (
           <ul className="divide-y divide-rule">

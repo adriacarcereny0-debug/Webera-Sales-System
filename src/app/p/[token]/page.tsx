@@ -51,7 +51,7 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
             <a href={`/api/public/quote/${token}/pdf`} className={buttonClass("secondary", "md", "w-full")}><Download className="size-4" strokeWidth={1.75} aria-hidden />Descargar en PDF</a>
           </aside>
         </div>
-        <p className="mt-8 text-center text-[0.75rem] text-faint">Gestionado con Webera Sales System</p>
+        <p className="mt-8 text-center text-[0.75rem] text-faint">Gestionado con Webora Studio</p>
       </div>
     </main>
   );

@@ -100,7 +100,7 @@ export default async function CompanyAdminPage({ params, searchParams }: { param
           </Sheet>
           {audit.length > 0 && (
             <Sheet>
-              <SheetHeader title="Cambios de Webera" />
+              <SheetHeader title="Cambios de Webora Studio" />
               <ul className="space-y-2 px-4 py-3 text-[0.82rem]">
                 {audit.map((a, i) => <li key={i}><span className="font-medium">{a.admin}</span> {ACTION_LABELS[a.action] ?? a.action}{a.target ? ` · ${a.target}` : ""}<span className="block text-[0.74rem] text-muted">{fmtDateTime(a.created_at)}</span></li>)}
               </ul>

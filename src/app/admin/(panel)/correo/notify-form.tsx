@@ -9,8 +9,8 @@ export function NotifyForm({ notifyEmails, leadAutoReply }: { notifyEmails: stri
   return (
     <form action={action} className="space-y-4 p-4 md:p-5">
       <Field label="Avisar a" htmlFor="notify_emails" error={state.fieldErrors?.notify_emails}
-        hint="Un email por línea. Si lo dejas vacío, se avisa a todos los administradores de Webera.">
-        <Textarea id="notify_emails" name="notify_emails" rows={3} defaultValue={notifyEmails.join("\n")} placeholder="ventas@webera.es" />
+        hint="Un email por línea. Si lo dejas vacío, se avisa a todos los administradores de Webora Studio.">
+        <Textarea id="notify_emails" name="notify_emails" rows={3} defaultValue={notifyEmails.join("\n")} placeholder="ventas@weborastudio.es" />
       </Field>
       <Checkbox name="lead_auto_reply" defaultChecked={leadAutoReply} label="Contestar automáticamente al interesado"
         hint="Recibe al momento un correo de «Hemos recibido tu solicitud, te llamamos muy pronto»." />

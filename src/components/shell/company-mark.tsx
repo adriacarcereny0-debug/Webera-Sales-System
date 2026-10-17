@@ -12,7 +12,7 @@ export function CompanyMark({ name, logoUrl }: { name: string; logoUrl?: string 
       )}
       <span className="min-w-0">
         <span className="block truncate text-[0.92rem] font-semibold leading-tight text-white">{name}</span>
-        <span className="block text-[0.72rem] leading-tight text-white/55">Webera Sales System</span>
+        <span className="block text-[0.72rem] leading-tight text-white/55">Webora Studio</span>
       </span>
     </div>
   );

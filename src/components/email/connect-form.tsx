@@ -19,7 +19,7 @@ const ext = "text-brand underline underline-offset-2";
 
 type EmailAction = (prev: ActionState, fd: FormData) => Promise<ActionState>;
 
-/** Lo usan tanto cada empresa (Ajustes › Correo) como Webera (/admin/correo): cambia solo la acción de guardar. */
+/** Lo usan tanto cada empresa (Ajustes › Correo) como Webora Studio (/admin/correo): cambia solo la acción de guardar. */
 export function EmailConnectForm({ own, save }: { own: CompanyEmailStatus["own"]; save: EmailAction }) {
   const [provider, setProvider] = useState<CompanyEmailProvider>(own?.provider ?? "gmail");
   const [state, action, pending] = useActionState(save, {});
@@ -53,7 +53,7 @@ export function EmailConnectForm({ own, save }: { own: CompanyEmailStatus["own"]
           <Notice kind="info" title="Cómo conseguir la contraseña de aplicación (1 minuto)">
             <ol className="mt-1 list-decimal space-y-1 pl-5">
               <li>Activa la <a className={ext} href="https://myaccount.google.com/signinoptions/twosv" target="_blank" rel="noreferrer">verificación en 2 pasos</a> de tu cuenta de Google, si no la tienes.</li>
-              <li>Abre <a className={ext} href="https://myaccount.google.com/apppasswords" target="_blank" rel="noreferrer">Contraseñas de aplicaciones</a>, escribe «Webera» y pulsa Crear.</li>
+              <li>Abre <a className={ext} href="https://myaccount.google.com/apppasswords" target="_blank" rel="noreferrer">Contraseñas de aplicaciones</a>, escribe «Webora Studio» y pulsa Crear.</li>
               <li>Copia las 16 letras que aparecen y pégalas aquí abajo.</li>
             </ol>
             <p className="mt-2">No es la contraseña de tu Gmail: es una clave aparte que puedes anular cuando quieras.</p>

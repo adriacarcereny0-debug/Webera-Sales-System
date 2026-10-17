@@ -37,7 +37,7 @@ export default async function AdminHome() {
   ];
   return (
     <>
-      <PageHeader title={`Hola, ${s.admin.name.split(" ")[0]}`} description="Estado de todas las empresas que usan Webera Sales System."
+      <PageHeader title={`Hola, ${s.admin.name.split(" ")[0]}`} description="Estado de todas las empresas que usan Webora Studio."
         actions={<ButtonLink href="/admin/empresas/nueva" variant="primary"><Plus className="size-4" strokeWidth={2} aria-hidden />Alta de cliente</ButtonLink>} />
       {leads.length > 0 && (
         <Sheet className="mb-6">

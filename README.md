@@ -1,8 +1,8 @@
-# Webera Sales System
+# Webora Studio
 
 Sistema comercial para empresas instaladoras de aire acondicionado, climatización, aerotermia y placas solares: recibe solicitudes desde la web, organiza contactos y oportunidades, prepara presupuestos revisados con PDF, programa visitas y tareas, automatiza avisos y muestra resultados reales.
 
-Producto de **Webera**, multiempresa: cada instalador trabaja con su logotipo, colores, servicios y usuarios, y solo accede a sus propios datos.
+Producto de **Webora Studio**, multiempresa: cada instalador trabaja con su logotipo, colores, servicios y usuarios, y solo accede a sus propios datos.
 
 ---
 
@@ -25,7 +25,7 @@ Producto de **Webera**, multiempresa: cada instalador trabaja con su logotipo, c
 | Administración | Datos de empresa y fiscales, logotipo, color de marca, horario, servicios, usuarios, plantillas de email con vista previa, formulario, campos personalizados, importación CSV con vista previa, exportación CSV y copia completa JSON, historial de auditoría. |
 | Demo | Empresa ficticia restaurable con un clic (solo afecta a empresas marcadas como demo) y datos de ejemplo eliminables en empresas reales. |
 | Manual | Manual de uso dentro de la aplicación (`/ayuda`) con guion de demostración de 5 minutos. |
-| Página pública de Webera | La portada (`/`) presenta el producto a instaladores con capturas reales y el formulario **«Pide una demostración»** (campo trampa, tiempo mínimo firmado, 5 envíos cada 10 min por IP, consentimiento). Guarda el origen (`?utm_source=` o `?ref=`) para saber de dónde llega cada interesado. Indexable (`robots.txt` solo permite `/` y `sitemap.xml`); el resto de la aplicación sigue con `noindex`. |
+| Página pública de Webora Studio | La portada (`/`) presenta el producto a instaladores con capturas reales y el formulario **«Pide una demostración»** (campo trampa, tiempo mínimo firmado, 5 envíos cada 10 min por IP, consentimiento). Guarda el origen (`?utm_source=` o `?ref=`) para saber de dónde llega cada interesado. Indexable (`robots.txt` solo permite `/` y `sitemap.xml`); el resto de la aplicación sigue con `noindex`. |
 
 ### Requiere credenciales para funcionar en producción
 | Función | Qué falta | Comportamiento sin ello |
@@ -45,16 +45,16 @@ Producto de **Webera**, multiempresa: cada instalador trabaja con su logotipo, c
 
 ## Consola de plataforma (`/admin`)
 
-Panel exclusivo del equipo de Webera, separado de las cuentas de las empresas (otra tabla de usuarios, otra cookie limitada a `/admin`, sesiones de 12 horas y registro de todo lo que se hace).
+Panel exclusivo del equipo de Webora Studio, separado de las cuentas de las empresas (otra tabla de usuarios, otra cookie limitada a `/admin`, sesiones de 12 horas y registro de todo lo que se hace).
 
 - **Resumen:** empresas activas, usuarios, solicitudes y presupuestos de todas las empresas, y las solicitudes de demostración nuevas.
 - **Solicitudes:** lo que llega desde «Pide una demostración» en la portada, con su origen, notas internas y estados (nueva, contactada, dada de alta, descartada). **«Dar de alta»** abre el alta de cliente con la empresa, el nombre y el email ya rellenados y, al crearla, marca la solicitud como dada de alta.
-- **Correo:** el correo de Webera (Gmail, SMTP o Resend, cifrado igual que el de las empresas). Desde él llegan los avisos de solicitudes nuevas (a las direcciones indicadas o, si no hay, a todos los administradores), se contesta automáticamente al interesado y salen los avisos de las empresas que aún no han conectado el suyo. Si no se conecta, las solicitudes se guardan igualmente.
+- **Correo:** el correo de Webora Studio (Gmail, SMTP o Resend, cifrado igual que el de las empresas). Desde él llegan los avisos de solicitudes nuevas (a las direcciones indicadas o, si no hay, a todos los administradores), se contesta automáticamente al interesado y salen los avisos de las empresas que aún no han conectado el suyo. Si no se conecta, las solicitudes se guardan igualmente.
 - **Alta de cliente:** crea la empresa con sus servicios, plantillas y automatizaciones por defecto, y el acceso de su propietario. Opcionalmente, con datos de ejemplo.
 - **Contraseñas para clientes:** en cada usuario, «Cambiar contraseña…» permite generar una segura o escribirla a mano y elegir si debe cambiarla al entrar. Las credenciales se muestran **una sola vez** con un botón «Copiar acceso» (dirección, usuario y contraseña) para enviárselas al cliente. Cambiar una contraseña cierra sus sesiones abiertas.
 - **Usuarios de todas las empresas:** búsqueda por email, nombre o empresa, con cambio de contraseña directo.
 - **Empresas:** editar nombre, identificador y color, nota interna, **suspender** (nadie entra y el formulario deja de aceptar solicitudes; los datos se conservan), restaurar demos y eliminar (exige escribir el identificador).
-- **Equipo Webera:** añadir o desactivar administradores y cambiar tu propia contraseña (mínimo 12 caracteres).
+- **Equipo Webora Studio:** añadir o desactivar administradores y cambiar tu propia contraseña (mínimo 12 caracteres).
 - **Registro:** cada acción de la consola queda anotada.
 
 ### Crear tu cuenta de administrador
@@ -159,7 +159,7 @@ db/migrations/        SQL: tablas, rol webera_app, RLS, consola de plataforma
 scripts/              migrar, demo, alta de empresa
 src/app/(app)/        pantallas autenticadas
 src/app/f/[slug]/     formulario público
-src/app/admin/        consola de plataforma de Webera
+src/app/admin/        consola de plataforma de Webora Studio
 src/app/api/          PDF, exportación, fotos, logotipo, cron
 src/server/           consultas y lógica de servidor
 src/lib/              dominio (cálculo, fechas, validación, CSV), auth, email

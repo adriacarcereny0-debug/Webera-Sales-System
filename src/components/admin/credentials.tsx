@@ -7,7 +7,7 @@ import { buttonClass } from "@/components/ui/button";
 export function CredentialsCard({ email, password, mustChange, appUrl, company }: { email: string; password: string; mustChange: boolean; appUrl: string; company?: string }) {
   const [copied, setCopied] = useState(false);
   const text = [
-    `Acceso a Webera Sales System${company ? ` · ${company}` : ""}`,
+    `Acceso a Webora Studio${company ? ` · ${company}` : ""}`,
     `Dirección: ${appUrl}/login`,
     `Usuario: ${email}`,
     `Contraseña: ${password}`,

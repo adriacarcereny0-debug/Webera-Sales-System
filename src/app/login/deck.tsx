@@ -12,7 +12,7 @@ interface Step {
   footer: string;
 }
 
-// Ejemplo ilustrativo: el recorrido de una solicitud dentro de Webera.
+// Ejemplo ilustrativo: el recorrido de una solicitud dentro de Webora Studio.
 const STEPS: Step[] = [
   {
     tint: "tint-blanca", stage: "Nueva solicitud", title: "Un cliente te escribe desde tu web",

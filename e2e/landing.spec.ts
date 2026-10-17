@@ -5,7 +5,7 @@ import { db } from "./helpers";
 import { hashPassword } from "../src/lib/auth/password";
 
 /**
- * Página pública de Webera → solicitud de demostración → aviso por correo → alta con un clic desde /admin.
+ * Página pública de Webora Studio → solicitud de demostración → aviso por correo → alta con un clic desde /admin.
  * La parte de correo se ejecuta solo con E2E_SMTP_SINK (servidor SMTP de pruebas en 127.0.0.1:587).
  */
 const SINK = process.env.E2E_SMTP_SINK;

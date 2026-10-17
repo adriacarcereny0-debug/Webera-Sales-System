@@ -4,7 +4,7 @@ import { getAdminSession } from "@/lib/auth/admin-session";
 import { WeberaWordmark } from "@/components/brand/webera-mark";
 import { AdminLoginForm } from "./form";
 
-export const metadata: Metadata = { title: "Consola Webera" };
+export const metadata: Metadata = { title: "Consola Webora Studio" };
 
 export default async function AdminLoginPage() {
   if (await getAdminSession()) redirect("/admin");
@@ -18,7 +18,7 @@ export default async function AdminLoginPage() {
         <WeberaWordmark tone="light" sub="Consola de plataforma" />
         <div className="mt-8 rounded-xl bg-sheet p-6 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)] ring-1 ring-white/10 sm:p-7">
           <h1 className="text-[1.35rem] font-semibold tracking-[-0.015em]">Acceso de administración</h1>
-          <p className="mt-1 mb-6 text-[0.9rem] text-muted">Solo para el equipo de Webera. Los clientes entran por <a href="/login" className="text-brand underline">/login</a>.</p>
+          <p className="mt-1 mb-6 text-[0.9rem] text-muted">Solo para el equipo de Webora Studio. Los clientes entran por <a href="/login" className="text-brand underline">/login</a>.</p>
           <AdminLoginForm />
         </div>
         <p className="mt-6 text-center text-[0.75rem] text-white/45">Los accesos quedan registrados.</p>

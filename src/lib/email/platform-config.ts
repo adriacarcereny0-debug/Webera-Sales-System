@@ -10,7 +10,7 @@ interface PlatformRow {
   test_error: string | null; notify_emails: string[]; lead_auto_reply: boolean;
 }
 
-/** Correo de Webera: el conectado desde /admin o, si no hay, el de las variables del servidor. */
+/** Correo de Webora Studio: el conectado desde /admin o, si no hay, el de las variables del servidor. */
 export async function loadPlatformTransport(tx: Tx): Promise<EmailTransport | null> {
   const r = await tx.one<PlatformRow>(`select * from platform_settings where id`);
   if (r?.provider && r.from_email && r.secret_enc) {

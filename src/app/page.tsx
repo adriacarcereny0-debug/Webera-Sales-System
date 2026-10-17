@@ -16,17 +16,17 @@ import { DemoForm } from "@/components/landing/demo-form";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { absolute: "Webera · El sistema comercial para instaladores de climatización y placas solares" },
+  title: { absolute: "Webora Studio · El sistema comercial para instaladores de climatización y placas solares" },
   description:
     "Recibe las solicitudes de tu web, contesta al cliente al momento, reparte el trabajo y envía presupuestos que se aceptan desde el móvil. Para instaladores de aire acondicionado, aerotermia y placas solares.",
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Webera Sales System",
+    title: "Webora Studio",
     description: "Que ninguna solicitud se quede en el cajón. El sistema comercial para empresas instaladoras.",
     type: "website",
     locale: "es_ES",
-    images: [{ url: "/landing/panel.webp", width: 2000, height: 1250, alt: "Panel de Webera Sales System con datos de ejemplo" }],
+    images: [{ url: "/landing/panel.webp", width: 2000, height: 1250, alt: "Panel de Webora Studio con datos de ejemplo" }],
   },
 };
 
@@ -78,13 +78,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ u
       <a href="#demo" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-sheet focus:px-3 focus:py-2">Ir al formulario</a>
 
       <header className="sticky top-0 z-30 border-b border-rule bg-[color-mix(in_oklab,var(--paper)_88%,transparent)] backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 md:px-6">
-          <Link href="/" aria-label="Webera, inicio"><WeberaWordmark sub="Sales System" /></Link>
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 md:px-6">
+          <Link href="/" aria-label="Webora Studio, inicio"><WeberaWordmark sub="Sales System" /></Link>
           <nav aria-label="Principal" className="flex items-center gap-1 text-[0.9rem]">
             <a href="#como-funciona" className="hidden rounded-md px-3 py-2 text-ink-2 hover:text-ink md:inline">Cómo funciona</a>
             <a href="#que-hace" className="hidden rounded-md px-3 py-2 text-ink-2 hover:text-ink md:inline">Qué hace solo</a>
             <a href="#preguntas" className="hidden rounded-md px-3 py-2 text-ink-2 hover:text-ink md:inline">Preguntas</a>
-            <Link href="/login" className="rounded-md px-3 py-2 text-ink-2 hover:text-ink">Acceder</Link>
+            <Link href="/login" className="rounded-md px-2 py-2 text-ink-2 hover:text-ink sm:px-3">Acceder</Link>
             <a href="#demo" className={buttonClass("primary", "md", "ml-1")}>Pedir demo</a>
           </nav>
         </div>
@@ -99,7 +99,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ u
               Que ninguna solicitud se quede en el cajón.
             </h1>
             <p className="mt-5 max-w-xl text-[1.1rem] leading-relaxed text-ink-2 text-pretty">
-              Webera recibe las solicitudes de tu web, contesta al cliente al momento, reparte el trabajo entre tu equipo y envía presupuestos que tus clientes aceptan desde el móvil.
+              Webora Studio recibe las solicitudes de tu web, contesta al cliente al momento, reparte el trabajo entre tu equipo y envía presupuestos que tus clientes aceptan desde el móvil.
               Tú te dedicas a instalar.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -214,7 +214,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ u
             <div>
               <h2 className="text-[2rem] leading-tight font-semibold tracking-[-0.02em] text-balance">Pide una demostración.</h2>
               <p className="mt-4 text-[1.02rem] leading-relaxed text-ink-2">
-                Te enseñamos Webera con ejemplos de tu trabajo: cómo entra una solicitud, cómo sale un presupuesto y qué ves cada mañana. Sin compromiso.
+                Te enseñamos Webora Studio con ejemplos de tu trabajo: cómo entra una solicitud, cómo sale un presupuesto y qué ves cada mañana. Sin compromiso.
               </p>
               <ul className="mt-6 space-y-3 text-[0.95rem] text-ink-2">
                 <li className="flex gap-3"><MapPin className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={1.75} aria-hidden />Pensado para empresas instaladoras en España.</li>
@@ -235,7 +235,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ u
             <a href="#demo" className="hover:text-ink">Pedir demo</a>
             <Link href="/login" className="hover:text-ink">Acceso clientes</Link>
           </div>
-          <p className="w-full text-[0.78rem] text-faint">© {new Date().getFullYear()} Webera · {env.appUrl.replace(/^https?:\/\//, "")}</p>
+          <p className="w-full text-[0.78rem] text-faint">© {new Date().getFullYear()} Webora Studio · {env.appUrl.replace(/^https?:\/\//, "")}</p>
         </div>
       </footer>
     </div>

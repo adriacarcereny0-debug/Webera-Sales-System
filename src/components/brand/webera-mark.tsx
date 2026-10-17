@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-/** Marca de Webera: una «W» trazada como una firma de bolígrafo, con el punto rojo del folio. */
+/** Marca de Webora Studio: una «W» trazada como una firma de bolígrafo, con el punto rojo del folio. */
 export function WeberaMark({ size = 28, className, tone = "ink" }: { size?: number; className?: string; tone?: "ink" | "light" }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden className={cn("shrink-0", className)}>
@@ -16,7 +16,7 @@ export function WeberaWordmark({ className, tone = "ink", sub }: { className?: s
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <WeberaMark tone={tone === "ink" ? "ink" : "light"} />
       <span className="leading-none">
-        <span className={cn("block text-[1.05rem] font-semibold tracking-[-0.02em]", tone === "ink" ? "text-ink" : "text-white")}>Webera</span>
+        <span className={cn("block whitespace-nowrap text-[1.05rem] font-semibold tracking-[-0.02em]", tone === "ink" ? "text-ink" : "text-white")}>Webora Studio</span>
         {sub && <span className={cn("mt-0.5 block text-[0.7rem] tracking-[0.01em]", tone === "ink" ? "text-muted" : "text-white/55")}>{sub}</span>}
       </span>
     </span>
