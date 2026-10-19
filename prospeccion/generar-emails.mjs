@@ -60,7 +60,7 @@ function service(it) {
   return { key: "general", label: "instalaciones" };
 }
 // Quita las coletillas de SEO de Google Maps: «AVS Aerotermia Bilbao | Instaladores» → «AVS Aerotermia Bilbao».
-const cleanName = (s) => s.replace(/\p{Extended_Pictographic}|\uFE0F/gu, "").split(/\s*\|\|?\s*|:\s+|\s+[-–—]\s+|\s*\/\/\s*|(?<=\p{L}{4})\.\s+(?=\p{Lu}\p{Ll})/u)[0].replace(/[\s,;:–-]+$/, "").trim();
+const cleanName = (s) => s.replace(/\p{Extended_Pictographic}|\uFE0F/gu, "").split(/\s*\|\|?\s*|\s*[※·•]\s*|:\s+|\s+[-–—]\s+|\s*\/\/\s*|(?<=\p{L}{4})\.\s+(?=\p{Lu}\p{Ll})/u)[0].replace(/[\s,;:–-]+$/, "").trim();
 const blank = (v) => (v == null || v === "null" || v === "undefined" ? "" : String(v).trim());
 const searchedCity = (it) => blank(pick(it, "searchString")).replace(/^instalador (aerotermia|aire acondicionado|placas solares)\s*/i, "");
 const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40).replace(/^-+|-+$/g, "");
