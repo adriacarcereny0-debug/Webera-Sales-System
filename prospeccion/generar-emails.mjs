@@ -12,7 +12,7 @@ import { dirname, join } from "node:path";
 
 const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : d; };
-const WITH_VALUE = new Set(["--nombre", "--telefono", "--max", "--web"]);
+const WITH_VALUE = new Set(["--nombre", "--telefono", "--max", "--web", "--excluir", "--salida"]);
 const input = args.find((a, i) => !a.startsWith("--") && !WITH_VALUE.has(args[i - 1]));
 if (!input) { console.error("Uso: node generar-emails.mjs <exportación de Apify .json|.csv> --nombre <tu nombre> --telefono <tu teléfono>"); process.exit(1); }
 const NOMBRE = opt("nombre", "[tu nombre]");
@@ -21,6 +21,7 @@ const MAX = Number(opt("max", "200"));
 const WEB = opt("web", "https://weborastudio.es").replace(/\/$/, "");
 const PREFIJO = args.includes("--sin-publicidad") ? "" : "Publicidad: ";
 const outDir = join(dirname(input), ".");
+const SALIDA = opt("salida", "emails");
 
 // ---------------------------------------------------------------------------
 // Lectura (JSON de Apify o CSV exportado desde la consola)
@@ -68,6 +69,13 @@ const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().rep
 // Selección: con email válido, sin duplicados, pymes primero
 // ---------------------------------------------------------------------------
 const seenEmail = new Set(), seenDomain = new Set(), seenName = new Set();
+// --excluir: emails o dominios ya contactados (uno por línea) para no escribir dos veces a la misma empresa.
+for (const line of (opt("excluir") ? readFileSync(opt("excluir"), "utf8").split(/\r?\n/) : [])) {
+  const v = line.trim().toLowerCase();
+  if (!v || v.startsWith("#")) continue;
+  if (v.includes("@")) { seenEmail.add(v); const d = v.split("@")[1]; if (!/^(gmail|hotmail|outlook|yahoo|icloud|live|msn|telefonica)\./.test(d)) seenDomain.add(d); }
+  else seenDomain.add(v);
+}
 const leads = [];
 for (const it of items) {
   if (String(pick(it, "permanentlyClosed")).toLowerCase() === "true" || String(pick(it, "temporarilyClosed")).toLowerCase() === "true") continue;
@@ -138,11 +146,11 @@ const emails = chosen.map(compose);
 const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 const cols = ["email", "empresa", "ciudad", "servicio", "telefono", "web", "resenas", "nota", "asunto", "cuerpo", "enlace", "ficha_google"];
 const csv = [cols.join(","), ...emails.map((e) => [e.email, e.name, e.city, e.service.label, e.phone, e.website, e.reviews, e.score, e.subject, e.body, e.link, e.maps].map(esc).join(","))].join("\n");
-writeFileSync(join(outDir, "emails.csv"), "﻿" + csv);
-writeFileSync(join(outDir, "emails-vista.md"), emails.map((e, i) => `## ${i + 1}. ${e.name} (${e.city || "sin ciudad"})\n\n**Para:** ${e.email}  \n**Asunto:** ${e.subject}\n\n${e.body}\n`).join("\n---\n\n"));
+writeFileSync(join(outDir, `${SALIDA}.csv`), "﻿" + csv);
+writeFileSync(join(outDir, `${SALIDA}-vista.md`), emails.map((e, i) => `## ${i + 1}. ${e.name} (${e.city || "sin ciudad"})\n\n**Para:** ${e.email}  \n**Asunto:** ${e.subject}\n\n${e.body}\n`).join("\n---\n\n"));
 
 console.log(`${items.length} fichas leídas · ${leads.length} con email válido y sin duplicados · ${emails.length} emails preparados`);
 const by = emails.reduce((m, e) => ((m[e.service.label] = (m[e.service.label] ?? 0) + 1), m), {});
 console.log("Por servicio:", by);
 if (emails.length < MAX) console.log(`Aviso: solo hay ${emails.length} con email. Sube maxCrawledPlacesPerSearch o añade ciudades en apify-input.json.`);
-console.log(`→ ${join(outDir, "emails.csv")}\n→ ${join(outDir, "emails-vista.md")}`);
+console.log(`→ ${join(outDir, `${SALIDA}.csv`)}\n→ ${join(outDir, `${SALIDA}-vista.md`)}`);

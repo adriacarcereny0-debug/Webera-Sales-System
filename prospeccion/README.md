@@ -25,3 +25,10 @@ La carpeta `datos/` está en `.gitignore`: los datos de contacto nunca se suben 
   `node generar-emails.mjs datos/apify.json --nombre "Adria" --telefono "623 41 27 96"`
 - Firma: Adria · 623 41 27 96.
 - Plan: 200 borradores en Gmail y envío el lunes 19/10/2026 a las 17:00 (Madrid) = 15:00 UTC.
+
+## Segunda tanda (300 empresas, martes 20/10/2026 a las 15:00 Madrid)
+1. Apify `compass/crawler-google-places` con `apify-input-2.json` (42 ciudades nuevas × 3 búsquedas, tope 7 $). Guardar en `datos/apify-2.json`.
+2. Unir `datos/apify.json` + `datos/apify-2.json` en `datos/apify-todo.json`.
+3. `node prospeccion/generar-emails.mjs datos/apify-todo.json --nombre "Adria" --telefono "623 41 27 96" --excluir datos/excluir.txt --max 300 --salida tanda2`
+   `excluir.txt` = los 200 del 19/10 (si se pierde, se rehace con los destinatarios de Gmail › Enviados con asunto «Publicidad:»).
+4. Enviar cada fila de `datos/tanda2.csv` con Gmail (send_message: to, asunto, cuerpo) y anotar el resultado en `datos/tanda2-enviados.jsonl`.
