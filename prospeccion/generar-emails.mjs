@@ -47,7 +47,7 @@ const items = input.endsWith(".csv") ? parseCsv(raw) : JSON.parse(raw);
 const pick = (it, ...keys) => { for (const k of keys) if (it[k] !== undefined && it[k] !== "") return it[k]; return ""; };
 const listOf = (it, key) => Array.isArray(it[key]) ? it[key] : Object.keys(it).filter((k) => k.startsWith(`${key}/`)).map((k) => it[k]).filter(Boolean);
 
-const BAD_EMAIL = /(@www\.|@(mysite|yoursite|tusitio|tudominio|yourdomain)\.|@(daikin|mitsubishielectric|mitsubishi|fujitsu|saunierduval|vaillant|ariston|baxi|junkers|bosch|lg|samsung|panasonic|toshiba|carrier|hitachi|haier|ferroli|roca|leroymerlin|endesa|iberdrola|repsol|naturgy|holaluz)\.|\.(png|jpe?g|gif|webp|svg)$|^(no-?reply|noreply|example|test|privacy|privacidad|rgpd|lopd|dpo|abuse|postmaster)@|@(sentry|wixpress|example|domain)\.|\.wixpress\.com$)/i;
+const BAD_EMAIL = /(@www\.|@(mysite|yoursite|tusitio|tudominio|yourdomain)\.|@(daikin|mitsubishielectric|mitsubishi|fujitsu|saunierduval|vaillant|ariston|baxi|junkers|bosch|lg|samsung|panasonic|toshiba|carrier|hitachi|haier|ferroli|roca|leroymerlin|habitissimo|cronoshare|instaladores10|endesa|iberdrola|repsol|naturgy|holaluz)\.|\.(png|jpe?g|gif|webp|svg)$|^(no-?reply|noreply|example|test|privacy|privacidad|rgpd|lopd|dpo|abuse|postmaster)@|@(sentry|wixpress|example|domain)\.|\.wixpress\.com$)/i;
 const isEmail = (e) => /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e) && !BAD_EMAIL.test(e);
 // Preferimos el email de contacto general frente al de una persona concreta (más adecuado para un primer contacto).
 const rankEmail = (e) => (/^(info|contacto|hola|comercial|ventas|oficina|administracion|presupuestos)@/i.test(e) ? 0 : 1);
