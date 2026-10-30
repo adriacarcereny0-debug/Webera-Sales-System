@@ -7,7 +7,7 @@ import { audit } from "@/lib/audit";
 import { decodeCsvBytes, mapHeaders, parseCsv } from "@/lib/csv";
 import { contactSchema } from "@/lib/validation";
 import { madridLocalToDate } from "@/lib/dates";
-import { clearCompanyData, clearDemoRecords, seedDemoData } from "@/lib/demo/seed";
+import { clearCompanyData, clearDemoRecords, demoContactsFor, seedDemoData } from "@/lib/demo/seed";
 import type { Q } from "@/lib/company-defaults";
 import type { Tx } from "@/lib/db";
 
@@ -138,7 +138,7 @@ export async function restoreDemo() {
     const owner = users[0]!.id;
     const others = users.filter((u) => u.id !== owner).map((u) => u.id);
     await clearCompanyData(asQ(tx), s.company.id);
-    await seedDemoData(asQ(tx), s.company.id, { owner, s1: others[0] ?? owner, s2: others[1] ?? others[0] ?? owner });
+    await seedDemoData(asQ(tx), s.company.id, { owner, s1: others[0] ?? owner, s2: others[1] ?? others[0] ?? owner }, new Date(), demoContactsFor(s.company.slug));
     await audit(tx, s, "demo.restaurar", "company", s.company.id);
   });
   revalidatePath("/", "layout");

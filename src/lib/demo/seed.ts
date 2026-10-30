@@ -80,6 +80,36 @@ const CONTACTS: DemoContact[] = [
   { name: "Francesc Boluda", city: "Xàtiva", cp: "46800", service: 0, source: "recomendacion", stage: "ganado", daysAgo: 175, amount: 3300, owner: "owner" },
 ];
 
+
+// Variante para instaladoras fotovoltaicas (provincia de Granada). Mismos criterios: todo ficticio.
+const SOLAR_CONTACTS: DemoContact[] = [
+  { name: "Antonio Ruiz Molina", city: "Armilla", cp: "18100", service: 3, source: "formulario_web", stage: "nuevo", daysAgo: 0.1, owner: null, timeframe: "un_mes", description: "Chalet adosado con cubierta orientada al sur, unos 40 m² libres. Factura de luz de 140 € al mes. Quiere saber cuántas placas le caben." },
+  { name: "Cortijo Los Almendros", company: "Los Almendros Agrícola S.L.", city: "Santa Fe", cp: "18320", service: 3, source: "formulario_web", stage: "nuevo", daysAgo: 0.3, owner: null, timeframe: "tres_meses", description: "Bombeo de riego y nave de aperos. Consumo alto en verano. Interesados en autoconsumo con baterías." },
+  { name: "Carmen López Jiménez", city: "Motril", cp: "18600", service: 4, source: "telefono", stage: "nuevo", daysAgo: 0.8, owner: "owner", timeframe: "un_mes", description: "Ya tiene 6 placas desde 2023. Quiere añadir batería para aprovechar la producción por la noche." },
+  { name: "Francisco Javier Ortega", city: "Maracena", cp: "18200", service: 3, source: "portal", stage: "pendiente_contactar", daysAgo: 1.5, owner: "s1", timeframe: "un_mes", nextAction: "Llamar para pedir una factura de luz", nextInDays: 0 },
+  { name: "Comunidad de Propietarios Jardines del Genil", company: "CP Jardines del Genil", city: "Granada", cp: "18006", service: 3, source: "email", stage: "pendiente_contactar", daysAgo: 2.5, owner: "owner", timeframe: "tres_meses", nextAction: "Pedir acta de la junta y planos de cubierta", nextInDays: 1, description: "Autoconsumo colectivo para zonas comunes y 24 viviendas." },
+  { name: "Lucía Fernández Castro", city: "Loja", cp: "18300", service: 2, source: "recomendacion", stage: "pendiente_contactar", daysAgo: 3, owner: "s2", nextAction: "Confirmar metros de la vivienda", nextInDays: -1, description: "Quiere aerotermia y placas a la vez para quitar la caldera de gasoil." },
+  { name: "Bodegas Señorío de Nevada", company: "Señorío de Nevada S.L.", city: "Villamena", cp: "18659", service: 3, source: "feria", stage: "visita_programada", daysAgo: 5, amount: 28500, owner: "owner", timeframe: "tres_meses", nextAction: "Visita a la nave de embotellado", nextInDays: 1 },
+  { name: "José Manuel Heredia", city: "Baza", cp: "18800", service: 3, source: "formulario_web", stage: "visita_programada", daysAgo: 6, amount: 6800, owner: "s1", timeframe: "un_mes", nextAction: "Visita técnica en cubierta", nextInDays: 2 },
+  { name: "Restaurante El Mirador", company: "El Mirador Albaicín S.L.", city: "Granada", cp: "18010", service: 4, source: "visita_tienda", stage: "visita_programada", daysAgo: 7, amount: 9400, owner: "s2", nextAction: "Medir cuadro eléctrico y sitio para baterías", nextInDays: 3 },
+  { name: "María Dolores Sánchez", city: "Guadix", cp: "18500", service: 3, source: "formulario_web", stage: "presupuesto_enviado", daysAgo: 12, amount: 7200, owner: "s1", timeframe: "un_mes", nextAction: "Resolver dudas sobre la subvención", nextInDays: 1 },
+  { name: "Talleres Hermanos Romero", company: "Hermanos Romero C.B.", city: "Atarfe", cp: "18230", service: 3, source: "recomendacion", stage: "presupuesto_enviado", daysAgo: 16, amount: 18900, owner: "owner", nextAction: "Llamar para conocer decisión", nextInDays: -2 },
+  { name: "Pedro Martín Vílchez", city: "Almuñécar", cp: "18690", service: 4, source: "telefono", stage: "presupuesto_enviado", daysAgo: 9, amount: 5300, owner: "s2" },
+  { name: "Hotel Rural Sierra Nevada", company: "Alojamientos Monachil S.L.", city: "Monachil", cp: "18193", service: 3, source: "feria", stage: "seguimiento", daysAgo: 24, amount: 34600, owner: "owner", nextAction: "Reunión con la propiedad", nextInDays: 4 },
+  { name: "Encarnación Morales", city: "Huétor Vega", cp: "18198", service: 3, source: "formulario_web", stage: "seguimiento", daysAgo: 19, amount: 6400, owner: "s1", nextAction: "Recordatorio de presupuesto", nextInDays: -3 },
+  { name: "Rafael Gómez Pérez", city: "Íllora", cp: "18260", service: 2, source: "portal", stage: "seguimiento", daysAgo: 22, amount: 11900, owner: "s2", nextAction: "Enviar ficha técnica de la bomba de calor", nextInDays: 0 },
+  { name: "Supermercado La Plaza", company: "Comercial La Plaza Granada S.L.", city: "Las Gabias", cp: "18110", service: 3, source: "email", stage: "ganado", daysAgo: 40, amount: 26700, owner: "owner" },
+  { name: "Isabel Torres Navarro", city: "Ogíjares", cp: "18151", service: 3, source: "formulario_web", stage: "ganado", daysAgo: 55, amount: 6900, owner: "s1" },
+  { name: "Juan Carlos Medina", city: "Pinos Puente", cp: "18240", service: 4, source: "recomendacion", stage: "ganado", daysAgo: 68, amount: 4800, owner: "s2" },
+  { name: "Clínica Veterinaria Alhambra", company: "Veterinaria Alhambra S.L.P.", city: "Granada", cp: "18008", service: 3, source: "portal", stage: "ganado", daysAgo: 90, amount: 12300, owner: "owner" },
+  { name: "Ana Belén Rodríguez", city: "Alhendín", cp: "18620", service: 3, source: "formulario_web", stage: "ganado", daysAgo: 115, amount: 7600, owner: "s1" },
+  { name: "Manuel Castillo Ríos", city: "La Zubia", cp: "18140", service: 5, source: "telefono", stage: "ganado", daysAgo: 26, amount: 180, owner: "s2" },
+  { name: "Cooperativa Olivarera San Isidro", company: "Coop. San Isidro", city: "Moclín", cp: "18247", service: 3, source: "feria", stage: "ganado", daysAgo: 150, amount: 41200, owner: "owner" },
+  { name: "Rocío Aguilera", city: "Churriana de la Vega", cp: "18194", service: 3, source: "formulario_web", stage: "perdido", daysAgo: 35, amount: 6100, owner: "s1", lostReason: "Eligió una oferta más barata" },
+  { name: "Gimnasio Fit Zaidín", company: "Fit Zaidín S.L.", city: "Granada", cp: "18007", service: 3, source: "email", stage: "perdido", daysAgo: 75, amount: 15800, owner: "owner", lostReason: "Pospone la inversión al año que viene" },
+  { name: "Miguel Ángel Puertas", city: "Cúllar Vega", cp: "18195", service: 3, source: "formulario_web", stage: "perdido", daysAgo: 120, amount: 5900, owner: "s2", lostReason: "Sin viabilidad técnica (sombras en cubierta)" },
+];
+
 type Line = [string, number, string, number, number?]; // descripción, cantidad, unidad, precio €, IVA
 
 // Conceptos genéricos con precios de ejemplo (no son tarifas reales).
@@ -142,7 +172,7 @@ export async function clearDemoRecords(tx: Q, companyId: string) {
   await tx.query(`delete from contacts where company_id = $1 and is_demo`, [companyId]);
 }
 
-export async function seedDemoData(tx: Q, companyId: string, users: DemoUsers, now = new Date()) {
+export async function seedDemoData(tx: Q, companyId: string, users: DemoUsers, now = new Date(), contacts: DemoContact[] = CONTACTS) {
   const rand = rng(20261015);
   const services = (await tx.query(`select id, name from services where company_id = $1 order by sort, name`, [companyId])) as { id: string; name: string }[];
   const svc = (i: number) => services[i % Math.max(services.length, 1)]?.id ?? null;
@@ -151,7 +181,7 @@ export async function seedDemoData(tx: Q, companyId: string, users: DemoUsers, n
 
   const STAGE_ORDER = ["nuevo", "pendiente_contactar", "visita_programada", "presupuesto_enviado", "seguimiento", "ganado"];
 
-  for (const [idx, c] of CONTACTS.entries()) {
+  for (const [idx, c] of contacts.entries()) {
     const rawCreated = new Date(now.getTime() - c.daysAgo * DAY - Math.floor(rand() * 5) * HOUR);
     const created = c.daysAgo < 1 ? rawCreated : workHours(rawCreated, idx * 3 + 1);
     const phone = `600 000 ${String(100 + idx).padStart(3, "0")}`;
@@ -274,6 +304,29 @@ export const DEMO_COMPANY = {
   schedule: "Lunes a viernes, de 8:00 a 14:00 y de 16:00 a 19:00",
   brandColor: "#23408e",
 };
+
+export const DEMO_SOLAR_COMPANY = {
+  slug: "demo-solar",
+  name: "Energía Solar Vega (demo)",
+  legalName: "Empresa ficticia de demostración",
+  city: "Granada",
+  province: "Granada",
+  email: "oficina@demo-solar.example",
+  phone: "600 000 900",
+  schedule: "Lunes a viernes, de 8:00 a 15:00",
+  brandColor: "#c2410c",
+};
+
+export const DEMO_SOLAR_USERS = [
+  { key: "owner" as const, email: "propietario@demo-solar.example", name: "Elena Vílchez", role: "propietario" },
+  { key: "s1" as const, email: "comercial@demo-solar.example", name: "Daniel Moreno", role: "comercial" },
+  { key: "s2" as const, email: "tecnico@demo-solar.example", name: "Paco Linares", role: "comercial" },
+];
+
+/** Datos de ejemplo que tocan a cada empresa demo según su identificador. */
+export function demoContactsFor(slug: string): DemoContact[] {
+  return slug === DEMO_SOLAR_COMPANY.slug ? SOLAR_CONTACTS : CONTACTS;
+}
 
 export const DEMO_USERS = [
   { key: "owner" as const, email: "propietario@demo.example", name: "Marina Climent", role: "propietario" },

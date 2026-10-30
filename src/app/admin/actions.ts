@@ -8,7 +8,7 @@ import { hashPassword, passwordProblem, temporaryPassword, verifyPassword } from
 import { rateLimit } from "@/lib/ratelimit";
 import { clientIp, userAgent } from "@/lib/request";
 import { applyCompanyDefaults } from "@/lib/company-defaults";
-import { clearCompanyData, seedDemoData } from "@/lib/demo/seed";
+import { clearCompanyData, demoContactsFor, seedDemoData } from "@/lib/demo/seed";
 import { slugify } from "@/lib/validation";
 import { isRole } from "@/lib/permissions";
 import { zodFieldErrors, type ActionState } from "@/lib/action-state";
@@ -159,12 +159,12 @@ export async function restoreCompanyDemo(fd: FormData) {
   const s = await requireAdmin();
   const id = z.string().uuid().parse(fd.get("id"));
   await withSystem(async (tx) => {
-    const c = await tx.one<{ is_demo: boolean }>(`select is_demo from companies where id = $1`, [id]);
+    const c = await tx.one<{ is_demo: boolean; slug: string }>(`select is_demo, slug from companies where id = $1`, [id]);
     if (!c?.is_demo) throw new Error("Solo se pueden restaurar empresas de demostración.");
     const users = await tx.query<{ id: string }>(`select id from users where company_id = $1 and active order by role = 'propietario' desc, created_at`, [id]);
     if (!users.length) throw new Error("La demo no tiene usuarios activos.");
     await clearCompanyData(q(tx), id);
-    await seedDemoData(q(tx), id, { owner: users[0].id, s1: users[1]?.id ?? users[0].id, s2: users[2]?.id ?? users[0].id });
+    await seedDemoData(q(tx), id, { owner: users[0].id, s1: users[1]?.id ?? users[0].id, s2: users[2]?.id ?? users[0].id }, new Date(), demoContactsFor(c.slug));
     await platformAudit(tx, s, "demo.restaurar", { companyId: id });
   });
   revalidatePath("/admin", "layout");
